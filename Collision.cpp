@@ -4,7 +4,7 @@
 Collision::Collision(){}
 bool  Collision::checkCollision(float p1x, float p2x)
 {
-	if (p1x +46 > p2x -46)
+	if (abs(p1x-p2x)/10 <= 5) //instead of p1x>p2x
 	{
 		return true;
 	}

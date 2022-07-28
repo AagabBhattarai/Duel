@@ -148,7 +148,6 @@ void Player::Update(float deltaTime, sf::Vector2u wsize, bool player_or_enemy, b
 
 void Player::Draw(sf::RenderWindow& window)
 {
-
     window.draw(body);
 }
 
