@@ -2,7 +2,8 @@
 #include "Player.h"
 
 Player::Player(sf::Texture* texture, sf::Vector2u imageCount, float switchTime, float speed, bool playerORenemy) :
-    animation(texture, imageCount, switchTime)
+    animation(texture, imageCount, switchTime),
+    healthbar(sf::Vector2f(500,30),sf::Vector2f(400,30),sf::Vector2f(500,30),playerORenemy )
 {
     this->speed = speed;
     row = 0;
@@ -148,6 +149,7 @@ void Player::Update(float deltaTime, sf::Vector2u wsize, bool player_or_enemy, b
 
 void Player::Draw(sf::RenderWindow& window)
 {
+    healthbar.Draw(window);
     window.draw(body);
 }
 

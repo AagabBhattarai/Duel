@@ -5,6 +5,7 @@
 #include <iostream>
 #include "Player.h"
 #include "Collision.h"
+#include "Timer.h"
 
 int main(int argc, char** argv)
 {
@@ -51,16 +52,27 @@ int main(int argc, char** argv)
     }
     tplayer2.setRepeated(true);
 
-
     //PLayer.cpp//Player.h
     Player player2(&tplayer2, sf::Vector2u(13, 3), 0.15f, 98.0f, false);
 
     float deltaTime = 0.f; //this is the difference in time to switch between frames
     sf::Clock clock;
+    sf::Clock clockForRoundTime;
+
+
+    //For Font for Timer
+    sf::Font font;
+    if(!font.loadFromFile("calibri.ttf"))
+    {
+        std::cout<<"Calibri ttf";
+        return -1;
+    }
+    Timer timer90sec(font, clockForRoundTime.getElapsedTime().asSeconds());
 
     //game loop starts now
     while (window.isOpen())
     {
+        timer90sec.update(static_cast<int>(clockForRoundTime.getElapsedTime().asSeconds()));
         deltaTime = clock.restart().asSeconds();
         sf::Event event;
 
@@ -80,6 +92,7 @@ int main(int argc, char** argv)
 
         window.clear();
         window.draw(gridsprite);
+        timer90sec.Draw(window);
         player.Draw(window);
         player2.Draw(window);
         window.display();

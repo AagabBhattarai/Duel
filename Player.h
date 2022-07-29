@@ -1,12 +1,13 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include "Animation.h"
-
+#include "Healthbar.h"
 class Player
 {
 private:
     sf::RectangleShape body;
     Animation animation;
+    HealthBar healthbar;
     unsigned int row;
     float speed;
     bool faceRight;
