@@ -23,6 +23,8 @@ void Animation::Update(PlayerState player_state, float deltaTime, bool faceRight
 {
     currentImage.y = player_state;
     totalTime += deltaTime;
+
+    bool hold;
     if (totalTime >= switchTime)
     {
         totalTime -= switchTime;
@@ -51,9 +53,9 @@ void Animation::Update(PlayerState player_state, float deltaTime, bool faceRight
         }
         else if(currentImage.y == CROUCH)
         {
-            if(currentImage.x >=3)
+            if(currentImage.x >=2)
             {
-                currentImage.x = 0;
+                currentImage.x = 1;
             }
         }
         else if(currentImage.y == REACTION)
@@ -69,11 +71,13 @@ void Animation::Update(PlayerState player_state, float deltaTime, bool faceRight
             if(currentImage.x >=1)
             {
                 currentImage.x = 0;
-                // player_state = IDLE;
+                player_state = IDLE;
             }
         }
         else if(currentImage.y == PUNCH)
         {
+            
+        
             if(currentImage.x >=2)
             {
                 currentImage.x = 0;
