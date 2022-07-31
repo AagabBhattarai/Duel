@@ -3,155 +3,205 @@
 
 Player::Player(sf::Texture* texture, sf::Vector2u imageCount, float switchTime, float speed, bool playerORenemy) :
     animation(texture, imageCount, switchTime),
-    healthbar(sf::Vector2f(500,30),sf::Vector2f(400,30),sf::Vector2f(500,30),playerORenemy )
+    healthbar(sf::Vector2f(500,30),sf::Vector2f(400,30),sf::Vector2f(500,30),playerORenemy),
+    maxHeight{300.0f},
+    floor{450.0f}
 {
     this->speed = speed;
-    row = 0;
+    // row = 0;
     faceRight = true;
 
-    body.setSize(sf::Vector2f(166.f, 116.f));
+    body.setSize(sf::Vector2f(166.f, 124.f));
     body.setOrigin(body.getSize().x / 2, body.getSize().y / 2);
-
-    body.setTexture(texture);
+    body.setScale(2, 2);
+    body.setTexture(texture);   
 
     if (playerORenemy)
         body.setPosition(600.f, 450.f);
     if (!playerORenemy)
         body.setPosition(1000.f, 450.f);
+
+    player_state = IDLE;
+    canJump = true;
+    onProcess = false;
 }
 
-Player::~Player()
-{
+Player::~Player(){}
 
-}
-
-
-//playerORenemy and player_or_enemy does same thing, i was afraid to use same name for some reason
 void Player::Update(float deltaTime, sf::Vector2u wsize, bool player_or_enemy, bool checkCollision)
 {
-    sf::Vector2f movement(0.f, 0.f);
-    body.setOrigin(body.getSize().x / 2, body.getSize().y / 2);
-    body.setScale(2, 2);
+    velocity.x = 0.f;
+    velocity.y =0.f;
+
 
     //For player 1
-    if (player_or_enemy)  //to differentiate between player 1 and player 2
+    if (player_or_enemy )  //to differentiate between player 1 and player 2
     {
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::G))
-        {
-            if (body.getPosition().x + body.getSize().x/2 >= wsize.x)
-                movement.x = 0.f;
-            else
-            {
-                movement.x += speed * deltaTime / 1000;
-                row = 1;
-            }
-        }
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::F))
-        {
-            if (body.getPosition().x - body.getSize().x/2 <= 0)
-                movement.x = 0;
-            else
-            {
-                movement.x -= speed * deltaTime / 1000;
-                row = 1;
-            }
-        }
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
-        {
-            if ((body.getPosition().x + body.getSize().x/2 >= wsize.x) || checkCollision)
-                movement.x = 0.f;
-
-            else
-            {
-                movement.x += speed * deltaTime;
-                row = 2;
-            }
-        }
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
-        {
-            if (body.getPosition().x - body.getSize().x/2 <= 0)
-                movement.x = 0.f;
-            else
-            {
-                movement.x -= speed * deltaTime;
-                row = 2;
-            }
-        }
-        if (body.getPosition().x == 600.f)
-            faceRight = true;
+        Player1_input(player_or_enemy, wsize, checkCollision);
     }
 
     //for player2
     else if (!player_or_enemy)
     {
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::L))
+       Player2_input(player_or_enemy, wsize, checkCollision);
+    }
+   // velocity .y += 981.0f *deltaTime;
+
+    if (velocity.x == 0.0f)
+    {
+        player_state = PlayerState::IDLE;
+    }
+
+
+    if (velocity.x > 0.0f)
+        faceRight = true;
+    else if (velocity.x < 0.0f)
+        faceRight = false;
+
+
+    animation.Update(player_state, deltaTime, faceRight);
+    //spritesheet navigate
+    body.setTextureRect(animation.uvRect);
+    body.move(velocity*deltaTime);
+}
+
+
+void Player::Player1_input(bool player_or_enemy, sf::Vector2u wsize, bool checkCollision)
+{
+
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
+            {
+            if (body.getPosition().x + body.getSize().x/2 >= wsize.x)
+                velocity.x = 0.f;
+            else
+            {
+                velocity.x += speed;//
+                player_state = PlayerState::WALK;
+            }
+        }
+
+        else if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
+        {
+            if ((body.getPosition().x - body.getSize().x/2 <= 0) || checkCollision )
+                velocity.x = 0.f;
+            else
+            {
+                velocity.x -= speed;
+                player_state = PlayerState::WALK;
+            }
+        }
+        else if(sf::Keyboard::isKeyPressed(sf::Keyboard::W) && canJump)
+        {
+            // canJump = false;
+            player_state = JUMP;
+           // velocity.y = -sqrtf(2.0 * 981.f * maxHeight);
+            velocity.x = 0.001;
+        }
+        else if (sf::Keyboard::isKeyPressed(sf::Keyboard::G))
         {
             if (body.getPosition().x + body.getSize().x/2 >= wsize.x)
-                movement.x = 0.f;
+                velocity.x = 0.f;
             else
             {
                 //we divide by delta time by 1000 for holding.
-                movement.x += speed * deltaTime / 1000;
-                row = 1;
+                velocity.x += speed / 1000;
+                player_state = PlayerState::PUNCH;
             }
         }
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::K))
+        else if (sf::Keyboard::isKeyPressed(sf::Keyboard::F))
         {
             if (body.getPosition().x - body.getSize().x/2 <= 0)
-                movement.x = 0;
+                velocity.x = 0;
             else
             {
-                movement.x -= speed * deltaTime / 1000;
-                row = 1;
+                velocity.x -= speed / 1000;
+                player_state = PlayerState::PUNCH;
             }
         }
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
-        {
-            if (body.getPosition().x + body.getSize().x/2 >= wsize.x)
-                movement.x = 0.f;
-            else
-            {
-                movement.x += speed * deltaTime;//
-                row = 2;
-            }
-        }
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
+
+        else if (sf::Keyboard::isKeyPressed(sf::Keyboard::G) && sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
         {
             if ((body.getPosition().x - body.getSize().x/2 <= 0) || checkCollision )
-                movement.x = 0.f;
+                velocity.x = 0.f;
             else
             {
-                movement.x -= speed * deltaTime;
-                row = 2;
+                velocity.x -= speed/1000;
+                player_state = PlayerState::PUNCH;
             }
         }
         // for players to look at each other.
         if (body.getPosition().x == 1000.f)
             faceRight = false;
-    }
-
-    if (movement.x == 0.0f)
-    {
-        row = 0;
-    }
-
-
-    if (movement.x > 0.0f)
-        faceRight = true;
-    else if (movement.x < 0.0f)
-        faceRight = false;
-
-    animation.Update(row, deltaTime, faceRight);
-    //spritesheet navigate
-    body.setTextureRect(animation.uvRect);
-    body.move(movement);
 }
+
+
+void Player::Player2_input(bool player_or_enemy, sf::Vector2u wsize, bool checkCollision)
+{
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::L))
+        {
+            if (body.getPosition().x + body.getSize().x/2 >= wsize.x)
+                velocity.x = 0.f;
+            else
+            {
+                //we divide by delta time by 1000 for holding.
+                velocity.x += speed / 1000;
+                player_state = PlayerState::PUNCH;
+            }
+        }
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::K))
+        {
+            if (body.getPosition().x - body.getSize().x/2 <= 0)
+                velocity.x = 0;
+            else
+            {
+                velocity.x -= speed / 1000;
+                player_state = PlayerState::PUNCH;
+            }
+        }
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+        {
+            if (body.getPosition().x + body.getSize().x/2 >= wsize.x)
+                velocity.x = 0.f;
+            else
+            {
+                velocity.x += speed;//
+                player_state = PlayerState::WALK;
+            }
+        }
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+        {
+            if ((body.getPosition().x - body.getSize().x/2 <= 0) || checkCollision )
+                velocity.x = 0.f;
+            else
+            {
+                velocity.x -= speed;
+                player_state = PlayerState::WALK;
+            }
+        }
+        if(sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && canJump)
+        {
+            canJump = true;
+            player_state = JUMP;
+            velocity.y = -sqrtf(2.0 * 981.f * maxHeight);
+            velocity.x = -0.001;
+        }
+        // for players to look at each other.
+        if (body.getPosition().x == 1000.f)
+            faceRight = false;
+}
+
+
+
+
+
 
 void Player::Draw(sf::RenderWindow& window)
 {
     healthbar.Draw(window);
     window.draw(body);
 }
+
+
 
 
 float Player::playerPosition()

@@ -1,4 +1,6 @@
+
 #include "Animation.h"
+
 
 Animation::Animation(sf::Texture* texture, sf::Vector2u imageCount, float switchTime)
 {
@@ -17,19 +19,29 @@ Animation::~Animation()
 
 }
 
-void Animation::Update(int row, float deltaTime, bool faceRight)
+void Animation::Update(PlayerState player_state, float deltaTime, bool faceRight)
 {
-    currentImage.y = row;
+    currentImage.y = player_state;
     totalTime += deltaTime;
     if (totalTime >= switchTime)
     {
         totalTime -= switchTime;
         currentImage.x++;
 
-        if (currentImage.x >= imageCount.x)
+        if (currentImage.y == IDLE || currentImage.y == PUNCH || currentImage.y || WALK)
         {
-            currentImage.x = 0;
+            if(currentImage.x >= 13)
+                currentImage.x = 0;
         }
+        if (currentImage.y == JUMP)
+        {
+            if(currentImage.x >=9)
+            {
+                currentImage.x=0;
+                player_state = IDLE;
+            }
+        }
+        
     }
 
 
