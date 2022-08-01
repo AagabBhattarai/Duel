@@ -35,7 +35,7 @@ void Player::Update(float deltaTime, sf::Vector2u wsize, bool player_or_enemy, b
 
 
     //For player 1
-    if (player_or_enemy )  //to differentiate between player 1 and player 2
+    if (player_or_enemy)  //to differentiate between player 1 and player 2
     {
         Player1_input(player_or_enemy, wsize, checkCollision);
     }
@@ -65,6 +65,10 @@ void Player::Update(float deltaTime, sf::Vector2u wsize, bool player_or_enemy, b
     body.move(velocity*deltaTime);
 }
 
+void Player::currentHealth(float currentHealth)
+{
+    healthbar.healthUpdate(currentHealth);
+}
 
 void Player::Player1_input(bool player_or_enemy, sf::Vector2u wsize, bool checkCollision)
 {
@@ -93,7 +97,7 @@ void Player::Player1_input(bool player_or_enemy, sf::Vector2u wsize, bool checkC
         else if(sf::Keyboard::isKeyPressed(sf::Keyboard::W) && canJump)
         {
             // canJump = false;
-            player_state = JUMP;
+             player_state = JUMP;
            // velocity.y = -sqrtf(2.0 * 981.f * maxHeight);
             velocity.x = 0.001;
         }

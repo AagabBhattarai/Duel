@@ -12,5 +12,7 @@ class HealthBar
     HealthBar(sf::Vector2f outline, sf::Vector2f health, sf::Vector2f damage,bool player1_or_player2);
     ~HealthBar();
     
+    void healthUpdate(float currentHealth);
     void Draw(sf::RenderWindow& window);
 };
+

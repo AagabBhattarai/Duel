@@ -24,7 +24,7 @@ void Animation::Update(PlayerState player_state, float deltaTime, bool faceRight
     currentImage.y = player_state;
     totalTime += deltaTime;
 
-    bool hold;
+    // bool hold;
     if (totalTime >= switchTime)
     {
         totalTime -= switchTime;
@@ -37,7 +37,7 @@ void Animation::Update(PlayerState player_state, float deltaTime, bool faceRight
         }
         if (currentImage.y == JUMP)
         {
-            if(currentImage.x >=9)
+            if(currentImage.x >=8)
             {
                 currentImage.x=0;
                 player_state = IDLE;
@@ -96,8 +96,10 @@ void Animation::Update(PlayerState player_state, float deltaTime, bool faceRight
         uvRect.width = abs(uvRect.width);
     }
     else
+
     {
         uvRect.left = (currentImage.x + 1) * abs(uvRect.width);
         uvRect.width = -abs(uvRect.width);
     }
 }
+

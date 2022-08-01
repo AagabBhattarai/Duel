@@ -6,6 +6,7 @@
 #include "Player.h"
 #include "Collision.h"
 #include "Timer.h"
+#include "Refree.h"
 
 int main(int argc, char** argv)
 {
@@ -68,8 +69,14 @@ int main(int argc, char** argv)
         return -1;
     }
     Timer timer90sec(font, clockForRoundTime.getElapsedTime().asSeconds());
-
+    window.setKeyRepeatEnabled(false);
     //game loop starts now
+
+
+    //For Refree;
+
+    Refree refree(500.0f,500.0f);
+
     while (window.isOpen())
     {
         timer90sec.update(static_cast<int>(clockForRoundTime.getElapsedTime().asSeconds()));
@@ -89,6 +96,15 @@ int main(int argc, char** argv)
 
         player1.Update(deltaTime, wsize, true,Collision::checkCollision(player1.playerPosition(),player2.playerPosition()));
         player2.Update(deltaTime, wsize, false, Collision::checkCollision(player1.playerPosition(), player2.playerPosition()));
+
+        if(Collision::checkCollision(player1.playerPosition(),player2.playerPosition()))
+        {
+            refree.mediate(player1.player_state, player2.player_state);
+        }
+
+        player1.currentHealth(refree.getP1Health());
+        player2.currentHealth(refree.getP2Health());
+
 
         window.clear();
         window.draw(gridsprite);

@@ -14,6 +14,7 @@ public:
     Animation(sf::Texture* texture, sf::Vector2u imageCount, float switchTime);
     ~Animation();
     void Update(PlayerState playerstate, float deltaTime, bool faceRight);
+    int getCurrrentState();
 public:
     sf::IntRect uvRect;
 

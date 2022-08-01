@@ -36,8 +36,13 @@ public:
 
     void Draw(sf::RenderWindow& window);
     float playerPosition();
-private:
+    friend class Animation;
+
+
+    void currentHealth(float currentHealth);
     PlayerState player_state;
+private:
+    
     bool canJump;
     bool onProcess;
 };

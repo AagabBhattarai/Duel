@@ -38,6 +38,11 @@ HealthBar::~HealthBar()
 
 }
 
+void HealthBar::healthUpdate(float currentHealth)
+{   
+    health.setSize(sf::Vector2f(currentHealth,30.0f));
+}
+
 void HealthBar::Draw(sf::RenderWindow& window)
 {
     window.draw(outline);
