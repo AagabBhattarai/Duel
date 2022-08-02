@@ -20,10 +20,10 @@ void Refree::mediate(PlayerState p1_state, PlayerState p2_state)
 {
     if(p1_state == PlayerState::PUNCH && (p2_state != PlayerState::STAND_BLOCK) )
     {
-        p2_health -=50;
+        p2_health -=1;
     }
     else if(p2_state == PlayerState::PUNCH && (p1_state != PlayerState::STAND_BLOCK) )
     {
-        p1_health -=50;
+        p1_health -=1;
     }
 }

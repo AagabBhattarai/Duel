@@ -7,9 +7,10 @@ class Animation
 private:
     sf::Vector2u imageCount;
     sf::Vector2u currentImage;
-
     float totalTime;
-    float switchTime;
+    float switchTime_O;
+    static const float switchTime[10][16]; // Stores all the frames delay(i.e how long to display a particular frame)
+    PlayerState previous_playerState;
 public:
     Animation(sf::Texture* texture, sf::Vector2u imageCount, float switchTime);
     ~Animation();
@@ -17,7 +18,4 @@ public:
     int getCurrrentState();
 public:
     sf::IntRect uvRect;
-
-
-
 };

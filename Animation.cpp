@@ -1,17 +1,42 @@
 
 #include "Animation.h"
 
+const float Animation::switchTime[10][16]{
+        // 1    2    3    4    5     6   7    8     9   10   11   12   13  14   15   
+        {0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.1, 0 , 0 },//IDLE-0
+        // 1    2    3    4    5     6   7    8     9   10   11   12   13  14  15  
+        {0.15,0.75,0.1f,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15, 0 , 0 },//PUNCH-1
+        // 1    2    3    4    5     6   7    8     9   10   11   12   13  14  15  
+        {0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15, 0 , 0 },//WALK-2
+        // 1    2    3    4    5     6   7    8     9   10   11   12   13  14  15  
+        {0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.1f, 0 , 0 },//JUMP-3
+        // 1    2    3    4    5     6   7    8     9   10   11   12   13  14  15        
+        {0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15, 0 , 0 },//CROUCH-4
+        // 1    2    3    4    5     6   7    8     9   10   11   12   13  14  15  
+        {0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15, 0 , 0 },//KICK-5
+        // 1    2    3    4    5     6   7    8     9   10   11   12   13  14  15  
+        {0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.1f,0.15,0.15,0.15,0.15,0.15, 0 , 0 },//REACTION-6
+        // 1    2    3    4    5     6   7    8     9   10   11   12   13  14  15  
+        {0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15, 0 , 0 },//STAND_BLOCK-7
+        // 1    2    3    4    5     6   7    8     9   10   11   12   13  14  15  
+        {0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15, 0 , 0 },//CROUCH_BLOCK-8
+        // 1    2    3    4    5     6   7    8     9   10   11   12   13  14  15  
+        {0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15, 0 , 0 },//JUMP_BLOCK-9
 
-Animation::Animation(sf::Texture* texture, sf::Vector2u imageCount, float switchTime)
+    };
+
+
+Animation::Animation(sf::Texture* texture, sf::Vector2u imageCount, float switchTime_O)
 {
     this->imageCount = imageCount;
-    this->switchTime = switchTime;
+    this->switchTime_O = switchTime_O;
     totalTime = 0;
     currentImage.x = 0;
 
     uvRect.width = texture->getSize().x / float(imageCount.x);
     uvRect.height = texture->getSize().y / float(imageCount.y);
-
+    
+    previous_playerState=PlayerState::IDLE;
 }
 
 Animation::~Animation()
@@ -20,14 +45,24 @@ Animation::~Animation()
 }
 
 void Animation::Update(PlayerState player_state, float deltaTime, bool faceRight)
-{
-    currentImage.y = player_state;
+{   
+    // if(!(previous_playerState==PUNCH || previous_playerState==REACTION || previous_playerState==JUMP))
+        currentImage.y = player_state;
     totalTime += deltaTime;
+ 
+        // if(switchTime[player_state][currentImage.x] != 0.1f)
+        // {
+        //     currentImage.y = previous_playerState;
+        // }
+        // else
+        // {
+        //     previous_playerState = player_state;
+        // }
 
     // bool hold;
-    if (totalTime >= switchTime)
+    if (totalTime >= switchTime[player_state][currentImage.x])
     {
-        totalTime -= switchTime;
+        totalTime -= switchTime[player_state][currentImage.x];
         currentImage.x++;
 
         if (currentImage.y == IDLE ||  currentImage.y || WALK)
@@ -63,7 +98,7 @@ void Animation::Update(PlayerState player_state, float deltaTime, bool faceRight
             if(currentImage.x >=13)
             {
                 currentImage.x = 0;
-                player_state = IDLE;
+                previous_playerState = IDLE;
             }
         }
         else if(currentImage.y == STAND_BLOCK)
@@ -76,12 +111,10 @@ void Animation::Update(PlayerState player_state, float deltaTime, bool faceRight
         }
         else if(currentImage.y == PUNCH)
         {
-            
-        
-            if(currentImage.x >=2)
+            if(currentImage.x >2)
             {
                 currentImage.x = 0;
-                player_state = IDLE;
+                previous_playerState = IDLE;
             }
         }
         
@@ -102,4 +135,7 @@ void Animation::Update(PlayerState player_state, float deltaTime, bool faceRight
         uvRect.width = -abs(uvRect.width);
     }
 }
+
+
+
 

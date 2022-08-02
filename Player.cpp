@@ -75,7 +75,7 @@ void Player::Player1_input(bool player_or_enemy, sf::Vector2u wsize, bool checkC
 
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
             {
-            if (body.getPosition().x + body.getSize().x/2 >= wsize.x)
+            if (body.getPosition().x + body.getSize().x/2 >= wsize.x || checkCollision)
                 velocity.x = 0.f;
             else
             {
@@ -86,7 +86,7 @@ void Player::Player1_input(bool player_or_enemy, sf::Vector2u wsize, bool checkC
 
         else if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
         {
-            if ((body.getPosition().x - body.getSize().x/2 <= 0) || checkCollision )
+            if ((body.getPosition().x - body.getSize().x/2 <= 0)  )
                 velocity.x = 0.f;
             else
             {
