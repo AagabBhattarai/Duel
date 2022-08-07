@@ -35,7 +35,7 @@ Animation::Animation(sf::Texture* texture, sf::Vector2u imageCount)
     uvRect.width = texture->getSize().x / float(imageCount.x);
     uvRect.height = texture->getSize().y / float(imageCount.y);
     previous_playerState=PlayerState::IDLE;
-    input_status = InputStatus::isRealeased;
+    input_status = InputStatus::isReleased;
 }
 
 Animation::~Animation()
@@ -45,21 +45,10 @@ Animation::~Animation()
 
 void Animation::Update(PlayerState player_state, float deltaTime, bool faceRight)
 {   
-    // if(!(previous_playerState==PUNCH || previous_playerState==REACTION || previous_playerState==JUMP))
+
     currentImage.y = player_state;
     totalTime += deltaTime;
  
-        // if(switchTime[player_state][currentImage.x] != 0.1f)
-        // {
-        //     if(player_state==JUMP)
-        //         currentImage.y = previous_playerState;
-        // }
-        // else
-        // {
-        //     previous_playerState = player_state;
-        // }
-
-    // bool hold;
     
     if (totalTime >= switchTime[player_state][currentImage.x])
     {
@@ -83,7 +72,8 @@ void Animation::Update(PlayerState player_state, float deltaTime, bool faceRight
             if(currentImage.x >=8)
             {
                 currentImage.x=0;
-                player_state = IDLE;
+                currentImage.y = IDLE;
+                input_status = isReleased;
 
             }
             else 
@@ -94,11 +84,16 @@ void Animation::Update(PlayerState player_state, float deltaTime, bool faceRight
         }
         else if(currentImage.y == KICK)
         {
+            if(currentImage.x=0)    
+                currentImage.x=8;
             if(currentImage.x >=16)
             {
                 currentImage.x = 0;
+                currentImage.y = IDLE;
+                input_status = isReleased;
 
             }
+            
         }
         else if(currentImage.y == CROUCH)
         {
@@ -129,7 +124,7 @@ void Animation::Update(PlayerState player_state, float deltaTime, bool faceRight
             {
                 currentImage.x = 0;
                 player_state = IDLE;
-                Animation::input_status == InputStatus::isRealeased;
+                Animation::input_status == InputStatus::isReleased;
             }
             else
             {

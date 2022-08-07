@@ -33,12 +33,12 @@ MainMenu::MainMenu(float width, float height)
 	mainMenu[3].setCharacterSize(70);
 	mainMenu[3].setPosition(400, 500);
 
-	MainMenuSelected = -1;
+	MainMenuSelected = 0;
 }
 
 MainMenu::~MainMenu()
 {
-	//destructer
+	//destructor
 }
 
 //draw Mainmenu

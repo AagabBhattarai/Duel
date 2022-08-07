@@ -18,5 +18,5 @@ enum PlayerState
 enum InputStatus
 {
     isPressed,
-    isRealeased
+    isReleased
 };

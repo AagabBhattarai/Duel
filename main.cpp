@@ -23,7 +23,7 @@ int main(int argc, char** argv)
         std::cout << "Width " << wsize.x << "Height " << wsize.y;
 
         sf::Texture grid;
-        if (!grid.loadFromFile("background/japan_edo.gif"))
+        if (!grid.loadFromFile("japan.gif"))
         {
             std::cout << "error for texture load";
             return -1;
@@ -51,7 +51,7 @@ int main(int argc, char** argv)
 
 
         sf::Texture tplayer2;
-        if (!tplayer2.loadFromFile("complete_spritesheet.png"))
+        if (!tplayer2.loadFromFile("complete_spritesheet_fixed.png"))
         {
             std::cout << "error for texture load player";
             return -2;
@@ -93,7 +93,7 @@ int main(int argc, char** argv)
 
             while (window.pollEvent(event))
             {
-                if (event.type == sf::Event::Closed)
+                if (event.type == sf::Event::Closed || (clockForRoundTime.getElapsedTime().asSeconds()>90))
                 {
                     window.close();
                 }
@@ -123,7 +123,6 @@ int main(int argc, char** argv)
             player1.Draw(window);
             player2.Draw(window);
             window.display();
-
 
         }
     }

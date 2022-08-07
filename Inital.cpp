@@ -116,5 +116,5 @@ int Initial::showMainMenu()//main page
 		mainMenu.draw(MENU);
 		MENU.display();
 	}
-
+	return 3;
 }

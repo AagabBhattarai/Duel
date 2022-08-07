@@ -33,7 +33,7 @@ void Player::Update(float deltaTime, sf::Vector2u wsize, bool player_or_enemy, b
 
     
     //For player 1
-    if (input_status == InputStatus::isRealeased)
+    if (Animation::input_status == InputStatus::isReleased)
     {
         if (player_or_enemy)  //to differentiate between player 1 and player 2
         {
@@ -74,8 +74,7 @@ void Player::Update(float deltaTime, sf::Vector2u wsize, bool player_or_enemy, b
     //spritesheet navigate
     body.setTextureRect(uvRect);
     body.move(velocity*deltaTime);
-    // if(body.getPosition().y > floor)
-    //     body.setPosition(body.getPosition().x,450.0f);
+
 }
 
 void Player::currentHealth(float currentHealth)
@@ -113,6 +112,7 @@ void Player::Player1_input(bool player_or_enemy, sf::Vector2u wsize, bool checkC
              player_state = JUMP;
           // velocity.y = -sqrtf(2.0 * 981.f * maxHeight);
             //velocity.x = 0.001;
+            Animation::input_status = isPressed;
         }
         else if (sf::Keyboard::isKeyPressed(sf::Keyboard::G))
         {
@@ -123,8 +123,8 @@ void Player::Player1_input(bool player_or_enemy, sf::Vector2u wsize, bool checkC
                 //we divide by delta time by 1000 for holding.
                 velocity.x += speed / 1000;
                 player_state = PlayerState::PUNCH;
-            }
-            Animation::input_status = isPressed;
+                Animation::input_status = isPressed;
+            }  
         }
         else if (sf::Keyboard::isKeyPressed(sf::Keyboard::F))
         {
@@ -134,8 +134,9 @@ void Player::Player1_input(bool player_or_enemy, sf::Vector2u wsize, bool checkC
             {
                 velocity.x -= speed / 1000;
                 player_state = PlayerState::PUNCH;
+                Animation::input_status = isPressed;
             }
-            Animation::input_status = isPressed;
+            
         }
 
         // else if (sf::Keyboard::isKeyPressed(sf::Keyboard::G) && sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
