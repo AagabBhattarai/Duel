@@ -5,7 +5,7 @@ const float Animation::switchTime[10][16]{
         // 1    2    3    4    5     6   7    8     9   10   11   12   13  14   15   
         {0.1,0.1, 0.1 , 0.1 ,0.1 ,0.1 ,0.1 ,0.1 ,0.1 ,0.15,0.15,0.15,0.1, 0 , 0 },//IDLE-0
         // 1    2    3    4    5     6   7    8     9   10   11   12   13  14  15  
-        {0.15,0.75,0.1f,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15, 0 , 0 },//PUNCH-1
+        {0.15,0.75,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15, 0 , 0 },//PUNCH-1
         // 1    2    3    4    5     6   7    8     9   10   11   12   13  14  15  
         {0.01,0.015,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15, 0 , 0 },//WALK-2
         // 1    2    3    4    5     6   7    8     9   10   11   12   13  14  15  
@@ -15,7 +15,7 @@ const float Animation::switchTime[10][16]{
         // 1    2    3    4    5     6   7    8     9   10   11   12   13  14  15  
         {0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15, 0 , 0 },//KICK-5
         // 1    2    3    4    5     6   7    8     9   10   11   12   13  14  15  
-        {0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.1f,0.15,0.15,0.15,0.15,0.15, 0 , 0 },//REACTION-6
+        {0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.1,0.15,0.15,0.15,0.15,0.15, 0 , 0 },//REACTION-6
         // 1    2    3    4    5     6   7    8     9   10   11   12   13  14  15  
         {0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15, 0 , 0 },//STAND_BLOCK-7
         // 1    2    3    4    5     6   7    8     9   10   11   12   13  14  15  
@@ -34,7 +34,7 @@ Animation::Animation(sf::Texture* texture, sf::Vector2u imageCount)
     currentImage.y = 0;
     uvRect.width = texture->getSize().x / float(imageCount.x);
     uvRect.height = texture->getSize().y / float(imageCount.y);
-    previous_playerState=PlayerState::IDLE;
+    // previous_playerState=PlayerState::IDLE;
     input_status = InputStatus::isReleased;
 }
 
@@ -67,6 +67,21 @@ void Animation::Update(PlayerState player_state, float deltaTime, bool faceRight
 
         }
 
+        else if(currentImage.y == PUNCH)
+        {
+            if(currentImage.x >=12)
+            {
+                currentImage.x = 0;
+                currentImage.y = IDLE;
+                input_status = isReleased;
+            }
+            else
+            {
+                 currentImage.y=PUNCH;
+
+            } 
+        }
+
         else if (currentImage.y == JUMP)
         {
             if(currentImage.x >=8)
@@ -78,15 +93,14 @@ void Animation::Update(PlayerState player_state, float deltaTime, bool faceRight
             }
             else 
             {
-                player_state = JUMP;
-
+                currentImage.y = JUMP;
             }
         }
         else if(currentImage.y == KICK)
         {
-            if(currentImage.x=0)    
-                currentImage.x=8;
-            if(currentImage.x >=16)
+            // if(currentImage.x=0)    
+            //     currentImage.x=8;
+            if(currentImage.x >=8)
             {
                 currentImage.x = 0;
                 currentImage.y = IDLE;
@@ -107,7 +121,8 @@ void Animation::Update(PlayerState player_state, float deltaTime, bool faceRight
             if(currentImage.x >=13)
             {
                 currentImage.x = 0;
-                previous_playerState = IDLE;
+                currentImage.y = PlayerState::IDLE;
+                input_status = isReleased;
             }
         }
         else if(currentImage.y == STAND_BLOCK)
@@ -115,22 +130,9 @@ void Animation::Update(PlayerState player_state, float deltaTime, bool faceRight
             if(currentImage.x >=1)
             {
                 currentImage.x = 0;
-                player_state = IDLE;
             }
         }
-        else if(currentImage.y == PUNCH)
-        {
-            if(currentImage.x >2)
-            {
-                currentImage.x = 0;
-                player_state = IDLE;
-                Animation::input_status == InputStatus::isReleased;
-            }
-            else
-            {
-                    player_state=PUNCH;
-            } 
-        }
+        
        
     }
 

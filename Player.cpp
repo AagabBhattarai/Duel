@@ -12,7 +12,7 @@ Player::Player(sf::Texture* texture, sf::Vector2u imageCount, float speed, bool 
 
     body.setSize(sf::Vector2f(166.f, 124.f));
     body.setOrigin(body.getSize().x / 2, body.getSize().y / 2);
-    body.setScale(2, 2);
+    body.setScale(2.2, 2.2);
     body.setTexture(texture);   
 
     if (playerORenemy)
@@ -178,6 +178,7 @@ void Player::Player1_input(bool player_or_enemy, sf::Vector2u wsize, bool checkC
             {
                 velocity.x += speed / 1000;
                 player_state = PlayerState::KICK;
+                Animation::input_status = isPressed;
             }
         }
         else if (sf::Keyboard::isKeyPressed(sf::Keyboard::R))
@@ -188,6 +189,7 @@ void Player::Player1_input(bool player_or_enemy, sf::Vector2u wsize, bool checkC
             {
                 velocity.x-= speed / 1000;
                 player_state = PlayerState::PUNCH;
+                Animation::input_status = isPressed;
             }
         }
 
@@ -209,6 +211,7 @@ void Player::Player1_input(bool player_or_enemy, sf::Vector2u wsize, bool checkC
             {
                 velocity.x += speed / 1000;
                 player_state = PlayerState::REACTION;
+                Animation::input_status = isPressed;
             }
         }
         else
@@ -254,6 +257,7 @@ void Player::Player2_input(bool player_or_enemy, sf::Vector2u wsize, bool checkC
                 //we divide by delta time by 1000 for holding.
                 velocity.x += speed / 1000;
                 player_state = PlayerState::PUNCH;
+                Animation::input_status = isPressed;
             }
         }
         else if (sf::Keyboard::isKeyPressed(sf::Keyboard::K))
@@ -262,8 +266,9 @@ void Player::Player2_input(bool player_or_enemy, sf::Vector2u wsize, bool checkC
                 velocity.x = 0;
             else
             {
-                velocity.x -= speed / 1000;
+                // velocity.x -= speed / 1000;
                 player_state = PlayerState::PUNCH;
+                Animation::input_status = isPressed;
             }
         }
         else if (sf::Keyboard::isKeyPressed(sf::Keyboard::O) && sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
@@ -322,8 +327,9 @@ void Player::Player2_input(bool player_or_enemy, sf::Vector2u wsize, bool checkC
                 velocity.x = 0;
             else
             {
-                velocity.x += speed / 1000;
+                // velocity.x += speed / 1000;
                 player_state = PlayerState::KICK;
+                Animation::input_status = isPressed;
             }
         }
 
@@ -334,8 +340,9 @@ void Player::Player2_input(bool player_or_enemy, sf::Vector2u wsize, bool checkC
                 velocity.x = 0;
             else
             {
-                velocity.x += speed / 1000;
+                // velocity.x += speed / 1000;
                 player_state = PlayerState::REACTION;
+                Animation::input_status = isPressed;
             }
         }
         else

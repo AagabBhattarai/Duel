@@ -16,7 +16,7 @@ int main(int argc, char** argv)
     if (Initial::showMainMenu() == 1)
     {
         sf::RenderWindow window(sf::VideoMode(1366, 704), "Duel");
-        window.setVerticalSyncEnabled(true);
+        // window.setVerticalSyncEnabled(true);
         //window.setFramerateLimit(60);
 
         sf::Vector2u wsize = window.getSize();
@@ -38,7 +38,7 @@ int main(int argc, char** argv)
         //FIghter 
 
         sf::Texture tplayer1;  //this is to import the player animation
-        if (!tplayer1.loadFromFile("complete_spritesheet_fixed.png"))
+        if (!tplayer1.loadFromFile("ryu.png"))
         {
             std::cout << "error for texture load player";
             return -2;
@@ -51,7 +51,7 @@ int main(int argc, char** argv)
 
 
         sf::Texture tplayer2;
-        if (!tplayer2.loadFromFile("complete_spritesheet_fixed.png"))
+        if (!tplayer2.loadFromFile("ken.png"))
         {
             std::cout << "error for texture load player";
             return -2;
