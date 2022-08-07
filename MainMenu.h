@@ -1,3 +1,4 @@
+
 #pragma once
 #include<SFML/Graphics.hpp>
 #include<iostream>
@@ -26,3 +27,4 @@ private:
 	Text mainMenu[4];
 
 };
+

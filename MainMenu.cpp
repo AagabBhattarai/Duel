@@ -1,3 +1,4 @@
+
 #include "MainMenu.h"
 
 MainMenu::MainMenu(float width, float height)
@@ -79,3 +80,4 @@ void MainMenu::MoveDown()
 
 	}
 }
+

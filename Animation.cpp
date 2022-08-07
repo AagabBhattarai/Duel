@@ -1,15 +1,41 @@
+
 #include "Animation.h"
 
-Animation::Animation(sf::Texture* texture, sf::Vector2u imageCount, float switchTime)
+const float Animation::switchTime[10][16]{
+        // 1    2    3    4    5     6   7    8     9   10   11   12   13  14   15   
+        {0.1,0.1, 0.1 , 0.1 ,0.1 ,0.1 ,0.1 ,0.1 ,0.1 ,0.15,0.15,0.15,0.1, 0 , 0 },//IDLE-0
+        // 1    2    3    4    5     6   7    8     9   10   11   12   13  14  15  
+        {0.15,0.75,0.1f,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15, 0 , 0 },//PUNCH-1
+        // 1    2    3    4    5     6   7    8     9   10   11   12   13  14  15  
+        {0.01,0.015,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15, 0 , 0 },//WALK-2
+        // 1    2    3    4    5     6   7    8     9   10   11   12   13  14  15  
+        {0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.1,0.1,0.1, 0 , 0 },//JUMP-3
+        // 1    2    3    4    5     6   7    8     9   10   11   12   13  14  15        
+        {0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15, 0 , 0 },//CROUCH-4
+        // 1    2    3    4    5     6   7    8     9   10   11   12   13  14  15  
+        {0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15, 0 , 0 },//KICK-5
+        // 1    2    3    4    5     6   7    8     9   10   11   12   13  14  15  
+        {0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.1f,0.15,0.15,0.15,0.15,0.15, 0 , 0 },//REACTION-6
+        // 1    2    3    4    5     6   7    8     9   10   11   12   13  14  15  
+        {0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15, 0 , 0 },//STAND_BLOCK-7
+        // 1    2    3    4    5     6   7    8     9   10   11   12   13  14  15  
+        {0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15, 0 , 0 },//CROUCH_BLOCK-8
+        // 1    2    3    4    5     6   7    8     9   10   11   12   13  14  15  
+        {0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15, 0 , 0 },//JUMP_BLOCK-9
+
+    };
+
+
+Animation::Animation(sf::Texture* texture, sf::Vector2u imageCount)
 {
     this->imageCount = imageCount;
-    this->switchTime = switchTime;
     totalTime = 0;
     currentImage.x = 0;
-
+    currentImage.y = 0;
     uvRect.width = texture->getSize().x / float(imageCount.x);
     uvRect.height = texture->getSize().y / float(imageCount.y);
-
+    previous_playerState=PlayerState::IDLE;
+    input_status = InputStatus::isRealeased;
 }
 
 Animation::~Animation()
@@ -17,22 +43,103 @@ Animation::~Animation()
 
 }
 
-void Animation::Update(int row, float deltaTime, bool faceRight)
-{
-    currentImage.y = row;
+void Animation::Update(PlayerState player_state, float deltaTime, bool faceRight)
+{   
+    // if(!(previous_playerState==PUNCH || previous_playerState==REACTION || previous_playerState==JUMP))
+    currentImage.y = player_state;
     totalTime += deltaTime;
-    if (totalTime >= switchTime)
-    {
-        totalTime -= switchTime;
-        currentImage.x++;
+ 
+        // if(switchTime[player_state][currentImage.x] != 0.1f)
+        // {
+        //     if(player_state==JUMP)
+        //         currentImage.y = previous_playerState;
+        // }
+        // else
+        // {
+        //     previous_playerState = player_state;
+        // }
 
-        if (currentImage.x >= imageCount.x)
+    // bool hold;
+    
+    if (totalTime >= switchTime[player_state][currentImage.x])
+    {
+        totalTime -= switchTime[player_state][currentImage.x];
+        currentImage.x++;
+        if (currentImage.y == IDLE )
         {
-            currentImage.x = 0;
+            if(currentImage.x >= 9)
+                currentImage.x = 0;
+            
         }
+        if (currentImage.y == WALK )
+        {
+            if(currentImage.x > 12)
+                currentImage.x = 0;
+
+        }
+
+        else if (currentImage.y == JUMP)
+        {
+            if(currentImage.x >=8)
+            {
+                currentImage.x=0;
+                player_state = IDLE;
+
+            }
+            else 
+            {
+                player_state = JUMP;
+
+            }
+        }
+        else if(currentImage.y == KICK)
+        {
+            if(currentImage.x >=16)
+            {
+                currentImage.x = 0;
+
+            }
+        }
+        else if(currentImage.y == CROUCH)
+        {
+            if(currentImage.x >=2)
+            {
+                currentImage.x = 1;
+            }
+        }
+        else if(currentImage.y == REACTION)
+        {
+            if(currentImage.x >=13)
+            {
+                currentImage.x = 0;
+                previous_playerState = IDLE;
+            }
+        }
+        else if(currentImage.y == STAND_BLOCK)
+        {
+            if(currentImage.x >=1)
+            {
+                currentImage.x = 0;
+                player_state = IDLE;
+            }
+        }
+        else if(currentImage.y == PUNCH)
+        {
+            if(currentImage.x >2)
+            {
+                currentImage.x = 0;
+                player_state = IDLE;
+                Animation::input_status == InputStatus::isRealeased;
+            }
+            else
+            {
+                    player_state=PUNCH;
+            } 
+        }
+       
     }
 
-
+        
     uvRect.top = currentImage.y * uvRect.height;
 
     if (faceRight)
@@ -41,8 +148,15 @@ void Animation::Update(int row, float deltaTime, bool faceRight)
         uvRect.width = abs(uvRect.width);
     }
     else
+
     {
         uvRect.left = (currentImage.x + 1) * abs(uvRect.width);
         uvRect.width = -abs(uvRect.width);
     }
 }
+
+
+
+
+
+
