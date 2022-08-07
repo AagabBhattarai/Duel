@@ -8,7 +8,7 @@ HealthBar::HealthBar(sf::Vector2f outline, sf::Vector2f health, sf::Vector2f dam
     
     //Set color for various rectangles
     this->damage.setFillColor(sf::Color::Red);
-    this->health.setFillColor(sf::Color::Green);
+    this->health.setFillColor(sf::Color(255,129,0));
     this->outline.setFillColor(sf::Color::Transparent);
 
     //set outline

@@ -1,17 +1,16 @@
-
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
 #include <SFML/System.hpp>
 #include <iostream>
 #include "Player.h"
 #include "Collision.h"
-#include "Timer.h"
 #include "Refree.h"
+#include "Timer.h"
 
 int main(int argc, char** argv)
 {
 
-    sf::RenderWindow window(sf::VideoMode(1366, 704), "Hello World");
+    sf::RenderWindow window(sf::VideoMode(1366, 704), "Duel");
     window.setVerticalSyncEnabled(true);
     //window.setFramerateLimit(60);
 
@@ -33,7 +32,7 @@ int main(int argc, char** argv)
     //FIghter 
 
     sf::Texture tplayer1;  //this is to import the player animation
-    if (!tplayer1.loadFromFile("complete_spritesheet.png"))
+    if (!tplayer1.loadFromFile("complete_spritesheet_fixed.png"))
     {
         std::cout << "error for texture load player";
         return -2;
@@ -42,7 +41,7 @@ int main(int argc, char** argv)
     //tplayer.setSmooth(true); //this is to blur the sprite to make it smooth.
 
     //PLayer.cpp//Player.h
-    Player player1(&tplayer1, sf::Vector2u(16, 10), 0.15f, 98.0f, true); //player1 vanne object create garyom.
+    Player player1(&tplayer1, sf::Vector2u(16, 10), 98.0f, true); //player1 vanne object create garyom.
 
 
     sf::Texture tplayer2;
@@ -54,7 +53,7 @@ int main(int argc, char** argv)
     tplayer2.setRepeated(true);
 
     //PLayer.cpp//Player.h
-    Player player2(&tplayer2, sf::Vector2u(16, 10), 0.15f, 98.0f, false);
+    Player player2(&tplayer2, sf::Vector2u(16, 10), 98.0f, false);
 
     float deltaTime = 0.f; //this is the difference in time to switch between frames
     sf::Clock clock;
@@ -68,6 +67,7 @@ int main(int argc, char** argv)
         std::cout<<"Calibri ttf";
         return -1;
     }
+
     Timer timer90sec(font, clockForRoundTime.getElapsedTime().asSeconds());
     window.setKeyRepeatEnabled(false);
     //game loop starts now
@@ -81,6 +81,7 @@ int main(int argc, char** argv)
     {
         timer90sec.update(static_cast<int>(clockForRoundTime.getElapsedTime().asSeconds()));
         deltaTime = clock.restart().asSeconds();
+        // std::cout << deltaTime<<std::endl;
         sf::Event event;
 
 
@@ -98,7 +99,9 @@ int main(int argc, char** argv)
         player2.Update(deltaTime, wsize, false, Collision::checkCollision(player1.playerPosition(), player2.playerPosition()));
 
         totaltime +=deltaTime;
-        if(Collision::checkCollision(player1.playerPosition(),player2.playerPosition()) && totaltime>=0.15)
+        if(Collision::checkCollision(player1.playerPosition(),player2.playerPosition()) 
+           && totaltime>=0.15 
+           && (player1.isFacingRIght()==true &&player2.isFacingRIght()==false))
         {
             totaltime = 0;
             refree.mediate(player1.player_state, player2.player_state);

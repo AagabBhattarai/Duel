@@ -1,14 +1,13 @@
 
 #include "Player.h"
 
-Player::Player(sf::Texture* texture, sf::Vector2u imageCount, float switchTime, float speed, bool playerORenemy) :
-    animation(texture, imageCount, switchTime),
+Player::Player(sf::Texture* texture, sf::Vector2u imageCount, float speed, bool playerORenemy) :
+    Animation(texture, imageCount),
     healthbar(sf::Vector2f(500,30),sf::Vector2f(400,30),sf::Vector2f(500,30),playerORenemy),
     maxHeight{300.0f},
     floor{450.0f}
 {
     this->speed = speed;
-    // row = 0;
     faceRight = true;
 
     body.setSize(sf::Vector2f(166.f, 124.f));
@@ -23,7 +22,6 @@ Player::Player(sf::Texture* texture, sf::Vector2u imageCount, float switchTime, 
 
     player_state = IDLE;
     canJump = true;
-    onProcess = false;
 }
 
 Player::~Player(){}
@@ -33,7 +31,7 @@ void Player::Update(float deltaTime, sf::Vector2u wsize, bool player_or_enemy, b
     velocity.x = 0.f;
     velocity.y =0.f;
 
-
+    
     //For player 1
     if (player_or_enemy)  //to differentiate between player 1 and player 2
     {
@@ -45,9 +43,20 @@ void Player::Update(float deltaTime, sf::Vector2u wsize, bool player_or_enemy, b
     {
        Player2_input(player_or_enemy, wsize, checkCollision);
     }
-   // velocity .y += 981.0f *deltaTime;
 
-    if (velocity.x == 0.0f)
+   
+    // std::cout<<body.getPosition().y<<std::endl;
+    // if (velocity.y !=0)
+    // {
+    //     // velocity.y = 0;
+    //     // body.setPosition(body.getPosition().x, 450.0f);
+    //     velocity.y += 981.0f * 0.5;
+    // }
+    // else
+    // {
+    //     velocity.y =0;
+    // }
+    if (velocity.x == 0.0f && velocity.y ==0.0f)
     {
         player_state = PlayerState::IDLE;
     }
@@ -59,10 +68,12 @@ void Player::Update(float deltaTime, sf::Vector2u wsize, bool player_or_enemy, b
         faceRight = false;
 
 
-    animation.Update(player_state, deltaTime, faceRight);
+    Animation::Update(player_state, deltaTime, faceRight);
     //spritesheet navigate
-    body.setTextureRect(animation.uvRect);
+    body.setTextureRect(uvRect);
     body.move(velocity*deltaTime);
+    // if(body.getPosition().y > floor)
+    //     body.setPosition(body.getPosition().x,450.0f);
 }
 
 void Player::currentHealth(float currentHealth)
@@ -98,7 +109,7 @@ void Player::Player1_input(bool player_or_enemy, sf::Vector2u wsize, bool checkC
         {
             // canJump = false;
              player_state = JUMP;
-           // velocity.y = -sqrtf(2.0 * 981.f * maxHeight);
+          // velocity.y = -sqrtf(2.0 * 981.f * maxHeight);
             velocity.x = 0.001;
         }
         else if (sf::Keyboard::isKeyPressed(sf::Keyboard::G))
@@ -290,7 +301,7 @@ void Player::Player2_input(bool player_or_enemy, sf::Vector2u wsize, bool checkC
         {
             canJump = true;
             player_state = JUMP;
-            velocity.y = -sqrtf(2.0 * 981.f * maxHeight);
+           // velocity.y = -sqrtf(2.0 * 981.f * maxHeight);
             velocity.x = -0.001;
         }
 
@@ -340,4 +351,9 @@ void Player::Draw(sf::RenderWindow& window)
 float Player::playerPosition()
 {
     return body.getPosition().x;
+}
+
+bool Player::isFacingRIght()
+{
+    return faceRight;
 }
