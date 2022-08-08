@@ -69,7 +69,7 @@ void Animation::Update(PlayerState player_state, float deltaTime, bool faceRight
 
         else if(currentImage.y == PUNCH)
         {
-            if(currentImage.x >=12)
+            if(currentImage.x >2)
             {
                 currentImage.x = 0;
                 currentImage.y = IDLE;

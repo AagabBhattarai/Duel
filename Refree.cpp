@@ -27,5 +27,10 @@ void Refree::mediate(PlayerState p1_state, PlayerState p2_state)
     {
         p1_health -=20;
     }
+    else if(p2_state == PlayerState::KICK && (p1_state != PlayerState::STAND_BLOCK) )
+    {
+        p1_health -=20;
+    }
 }
+
 

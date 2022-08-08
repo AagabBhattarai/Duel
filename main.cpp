@@ -8,6 +8,8 @@
 #include "Refree.h"
 #include "Timer.h"
 #include "Initial.h"
+
+
 using namespace sf;
 
 int main(int argc, char** argv)
@@ -116,7 +118,9 @@ int main(int argc, char** argv)
             player1.currentHealth(refree.getP1Health());
             player2.currentHealth(refree.getP2Health());
 
-
+            if(refree.getP1Health() <0 ||refree.getP2Health() <0)   
+                window.close();
+            
             window.clear();
             window.draw(gridsprite);
             timer90sec.Draw(window);
