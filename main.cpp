@@ -107,6 +107,9 @@ int main(int argc, char** argv)
             player2.Update(deltaTime, wsize, false, Collision::checkCollision(player1.playerPosition(), player2.playerPosition()));
 
             totaltime += deltaTime;
+            float p1_health = refree.getP1Health();
+            float p2_health = refree.getP2Health();
+
             if (Collision::checkCollision(player1.playerPosition(), player2.playerPosition())
                 && totaltime >= 0.15
                 && (player1.isFacingRIght() == true && player2.isFacingRIght() == false))
@@ -117,6 +120,14 @@ int main(int argc, char** argv)
 
             player1.currentHealth(refree.getP1Health());
             player2.currentHealth(refree.getP2Health());
+            if(p1_health > refree.getP1Health())
+            {
+                player1.player_state = refree.getNewState_p1();
+            }
+            if(p2_health > refree.getP2Health())
+            {
+                player2.player_state = refree.getNewState_p2();
+            }
 
             if(refree.getP1Health() <0 ||refree.getP2Health() <0)   
                 window.close();

@@ -20,5 +20,6 @@ public:
     sf::IntRect uvRect;
 protected:
     InputStatus input_status;
+    bool reaction_done;
 };
 

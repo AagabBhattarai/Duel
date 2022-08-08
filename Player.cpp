@@ -30,8 +30,24 @@ void Player::Update(float deltaTime, sf::Vector2u wsize, bool player_or_enemy, b
 {
     velocity.x = 0.f;
     velocity.y =0.f;
-
     
+    //This segement is for making sure punch reaction is played at full
+    if(!Animation::reaction_done)
+    {
+        if (player_or_enemy)  //to differentiate between player 1 and player 2
+        {
+            if(player_state == REACTION)
+                Animation::input_status = InputStatus::isPressed;
+        }
+            //for player2
+        else if (!player_or_enemy)
+        {
+            if(player_state == REACTION)
+                Animation::input_status = InputStatus::isPressed;
+        }
+    }
+    else    
+        Animation::reaction_done = false;
     //For player 1
     if (Animation::input_status == InputStatus::isReleased)
     {

@@ -5,7 +5,7 @@ const float Animation::switchTime[10][16]{
         // 1    2    3    4    5     6   7    8     9   10   11   12   13  14   15   
         {0.1,0.1, 0.1 , 0.1 ,0.1 ,0.1 ,0.1 ,0.1 ,0.1 ,0.15,0.15,0.15,0.1, 0 , 0 },//IDLE-0
         // 1    2    3    4    5     6   7    8     9   10   11   12   13  14  15  
-        {0.15,0.75,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15, 0 , 0 },//PUNCH-1
+        {0.15,0.5,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15, 0 , 0 },//PUNCH-1
         // 1    2    3    4    5     6   7    8     9   10   11   12   13  14  15  
         {0.01,0.015,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15, 0 , 0 },//WALK-2
         // 1    2    3    4    5     6   7    8     9   10   11   12   13  14  15  
@@ -15,7 +15,7 @@ const float Animation::switchTime[10][16]{
         // 1    2    3    4    5     6   7    8     9   10   11   12   13  14  15  
         {0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15, 0 , 0 },//KICK-5
         // 1    2    3    4    5     6   7    8     9   10   11   12   13  14  15  
-        {0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.1,0.15,0.15,0.15,0.15,0.15, 0 , 0 },//REACTION-6
+        {0.15,0.2,0.3,0.15,0.15,0.15,0.15,0.1,0.15,0.15,0.15,0.15,0.15, 0 , 0 },//REACTION-6
         // 1    2    3    4    5     6   7    8     9   10   11   12   13  14  15  
         {0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15, 0 , 0 },//STAND_BLOCK-7
         // 1    2    3    4    5     6   7    8     9   10   11   12   13  14  15  
@@ -36,6 +36,7 @@ Animation::Animation(sf::Texture* texture, sf::Vector2u imageCount)
     uvRect.height = texture->getSize().y / float(imageCount.y);
     // previous_playerState=PlayerState::IDLE;
     input_status = InputStatus::isReleased;
+    reaction_done = false;
 }
 
 Animation::~Animation()
@@ -118,11 +119,12 @@ void Animation::Update(PlayerState player_state, float deltaTime, bool faceRight
         }
         else if(currentImage.y == REACTION)
         {
-            if(currentImage.x >=13)
+            if(currentImage.x >3)
             {
                 currentImage.x = 0;
                 currentImage.y = PlayerState::IDLE;
                 input_status = isReleased;
+                reaction_done = true;
             }
         }
         else if(currentImage.y == STAND_BLOCK)
