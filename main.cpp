@@ -154,6 +154,8 @@ int main(int argc, char** argv)
             timer90sec.Draw(window);
             player1.Draw(window);
             player2.Draw(window);
+
+            //Following part checks if hit spark is to be shown or not (if there is an object to punch it shows)
             if(refree.getP1_impact() && player1.isImpactPhase())
             {
                 player1.ImpactForce::Draw(window);
@@ -162,7 +164,7 @@ int main(int argc, char** argv)
             {
                 player2.ImpactForce::Draw(window);
             }
-            
+
             window.display();
 
         }
