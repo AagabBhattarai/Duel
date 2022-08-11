@@ -22,7 +22,9 @@ protected:
     InputStatus input_status;
     bool reaction_done;
     bool impact_phase;
+    bool transition_phase;
 public:
     bool isImpactPhase();
+    bool isTransitionPhase();
 };
 

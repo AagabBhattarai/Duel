@@ -39,6 +39,7 @@ Animation::Animation(sf::Texture* texture, sf::Vector2u imageCount)
     reaction_done = false;
     impact_phase = false;
     previous_playerState = PlayerState::IDLE;
+    transition_phase = false;
 }
 
 Animation::~Animation()
@@ -48,10 +49,11 @@ Animation::~Animation()
 
 void Animation::Update(PlayerState player_state, float deltaTime, bool faceRight)
 {   
+    float s1 = switchTime[player_state][currentImage.x];//checks for change is x image
 
     currentImage.y = player_state;
     totalTime += deltaTime;
-    
+    ;
     if(player_state != previous_playerState)
     {
         currentImage.x = 0;
@@ -145,8 +147,17 @@ void Animation::Update(PlayerState player_state, float deltaTime, bool faceRight
         
        
     }
+    float s2 = switchTime[player_state][currentImage.x];
+    if((s2-s1)>0.15 && s2 > 0.25) // here 0.15 must be differnce between main impact frame and normal frame
+    {
+        transition_phase = true;
+    }
+    else
+    {
+        transition_phase = false;
+    }
 
-    if(switchTime[player_state][currentImage.x] > 0.4) 
+    if(switchTime[player_state][currentImage.x] > 0.3) 
     {
         impact_phase = true;
     }
@@ -173,6 +184,11 @@ void Animation::Update(PlayerState player_state, float deltaTime, bool faceRight
 bool Animation::isImpactPhase()
 {
     return impact_phase;
+}
+
+bool Animation::isTransitionPhase()
+{
+    return transition_phase;
 }
 
 

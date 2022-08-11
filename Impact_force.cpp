@@ -12,3 +12,8 @@ ImpactForce::ImpactForce(sf::Texture* texture)
     hit_spark.setTextureRect(spark_uv);
     hit_spark.setScale(0.5,0.5);
 }
+
+void ImpactForce::Draw(sf::RenderWindow& window)
+{
+    window.draw(hit_spark);
+}

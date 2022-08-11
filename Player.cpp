@@ -91,8 +91,7 @@ void Player::Update(float deltaTime, sf::Vector2u wsize, bool player_or_enemy, b
     //spritesheet navigate
     body.setTextureRect(Animation::uvRect);
     body.move(velocity*deltaTime);
-    std::cout << "size:"<<body.getSize().x <<std::endl<< body.getSize().y;
-    std::cout << "\nOrigin:"<<body.getPosition().x <<std::endl<< body.getPosition().y;
+    
 
     if(faceRight)
         ImpactForce::hit_spark.setPosition(body.getPosition().x + 125.f,body.getPosition().y - 70.f);
@@ -387,7 +386,7 @@ void Player::Draw(sf::RenderWindow& window)
 {
     healthbar.Draw(window);
     window.draw(body);
-    window.draw(ImpactForce::hit_spark);
+    // ImpactForce::Draw(window);
 }
 
 

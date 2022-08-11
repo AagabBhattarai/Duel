@@ -118,16 +118,19 @@ int main(int argc, char** argv)
             float p2_health = refree.getP2Health();
 
             if  (Collision::checkCollision(player1.playerPosition(), player2.playerPosition())
-                && totaltime >= 0.35
+                && (player1.isTransitionPhase() || player2.isTransitionPhase())
                 && (player1.isFacingRIght() == true || player2.isFacingRIght() == false)
                 ) 
             {
-                totaltime = 0;
+                // totaltime = 0;
                 refree.mediate(player1.player_state, player2.player_state, player1.isImpactPhase(), player2.isImpactPhase());
             }
 
+            //Health update part
             player1.currentHealth(refree.getP1Health());
             player2.currentHealth(refree.getP2Health());
+
+            //if health changes then state of player must be that of reacting to the hit
             if(p1_health > refree.getP1Health())
             {
                 player1.player_state = refree.getNewState_p1();
@@ -137,6 +140,12 @@ int main(int argc, char** argv)
                 player2.player_state = refree.getNewState_p2();
             }
 
+            //spark part
+            //this is remnants of the part to tell you that anything that must be drawn should be after window.clear
+            //also draw priortiy wise 1st background then on and on
+            
+
+
             if(refree.getP1Health() <0 ||refree.getP2Health() <0)   
                 window.close();
             
@@ -145,6 +154,15 @@ int main(int argc, char** argv)
             timer90sec.Draw(window);
             player1.Draw(window);
             player2.Draw(window);
+            if(refree.getP1_impact() && player1.isImpactPhase())
+            {
+                player1.ImpactForce::Draw(window);
+            }
+            if(refree.getP2_impact() && player2.isImpactPhase())
+            {
+                player2.ImpactForce::Draw(window);
+            }
+            
             window.display();
 
         }

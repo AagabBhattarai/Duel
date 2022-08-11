@@ -5,6 +5,9 @@ Refree::Refree(float p1_health, float p2_health)
 {
     this->p1_health=p1_health;
     this->p2_health=p2_health;
+    p1_punch_hit_p2 = false;
+    p2_punch_hit_p1 = false;
+
 }
 
 float Refree::getP1Health()
@@ -19,11 +22,17 @@ float Refree::getP2Health()
 
 void Refree::mediate(PlayerState p1_state, PlayerState p2_state, bool p1_impact_phase, bool p2_impact_phase)
 {
+    //initally no player has struck a blow
+    // p1_punch_hit_p2 = false;
+    // p2_punch_hit_p1 = false;
+
+    //check if any of the player has been struck
     if(p1_state == PlayerState::PUNCH && (p2_state != PlayerState::STAND_BLOCK) && p1_impact_phase)
     {
         p2_health -=20;
         new_state_p2 = PlayerState::REACTION;
         new_state_p1 = p1_state;
+        p1_punch_hit_p2 = true;
     }
     else if(p1_state == PlayerState::KICK && (p2_state != PlayerState::STAND_BLOCK) && p1_impact_phase)
     {
@@ -36,6 +45,7 @@ void Refree::mediate(PlayerState p1_state, PlayerState p2_state, bool p1_impact_
         p1_health -=20;
         new_state_p1 = PlayerState::REACTION;
         new_state_p2 = p2_state;
+        p2_punch_hit_p1 = true;
     }
     else if(p2_state == PlayerState::KICK && (p1_state != PlayerState::STAND_BLOCK) &&p2_impact_phase )
     {
@@ -53,5 +63,13 @@ PlayerState Refree::getNewState_p2()
 {
     return new_state_p2;
 }
+bool Refree::getP1_impact()
+{
+    return p1_punch_hit_p2;
+}
 
+bool Refree::getP2_impact()
+{
+    return p2_punch_hit_p1;
+}
 
