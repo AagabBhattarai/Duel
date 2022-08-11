@@ -45,6 +45,7 @@ int main(int argc, char** argv)
             std::cout<<"Error for spark image";
             return -1;
         }
+        spark.setRepeated(true);
         //FIghter 
 
         sf::Texture tplayer1;  //this is to import the player animation
@@ -92,8 +93,10 @@ int main(int argc, char** argv)
         //For Refree;
 
         Refree refree(500.0f, 500.0f);
-        float totaltime{};
 
+        //these following variables are for spark animaton
+        float totaltime{};
+        int spark_count{0};
         while (window.isOpen())
         {
             timer90sec.update(static_cast<int>(clockForRoundTime.getElapsedTime().asSeconds()));
@@ -113,7 +116,7 @@ int main(int argc, char** argv)
             player1.Update(deltaTime, wsize, true, Collision::checkCollision(player1.playerPosition(), player2.playerPosition()));
             player2.Update(deltaTime, wsize, false, Collision::checkCollision(player1.playerPosition(), player2.playerPosition()));
 
-            totaltime += deltaTime;
+            
             float p1_health = refree.getP1Health();
             float p2_health = refree.getP2Health();
 
@@ -156,12 +159,25 @@ int main(int argc, char** argv)
             player2.Draw(window);
 
             //Following part checks if hit spark is to be shown or not (if there is an object to punch it shows)
+            totaltime += deltaTime;
             if(refree.getP1_impact() && player1.isImpactPhase())
             {
+                if(totaltime >= 0.1)
+                {
+                    spark_count++;
+                    player1.ImpactForce::Update(spark_count);
+                    totaltime = 0;
+                }
                 player1.ImpactForce::Draw(window);
             }
             if(refree.getP2_impact() && player2.isImpactPhase())
             {
+                if(totaltime >= 0.1)
+                {
+                    spark_count++;
+                    player2.ImpactForce::Update(spark_count);
+                    totaltime = 0;
+                }
                 player2.ImpactForce::Draw(window);
             }
 

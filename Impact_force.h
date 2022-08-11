@@ -9,4 +9,5 @@ class ImpactForce
         sf::IntRect spark_uv;
     public:
         void Draw(sf::RenderWindow& window);
+        void Update(int left);
 };

@@ -157,6 +157,7 @@ void Animation::Update(PlayerState player_state, float deltaTime, bool faceRight
         transition_phase = false;
     }
 
+    //this part is to know in which frame player actually exerts his force
     if(switchTime[player_state][currentImage.x] > 0.3) 
     {
         impact_phase = true;
