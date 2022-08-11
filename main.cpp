@@ -17,6 +17,7 @@ int main(int argc, char** argv)
     
     if (Initial::showMainMenu() == 1)
     {
+       
         sf::RenderWindow window(sf::VideoMode(1366, 704), "Duel");
         // window.setVerticalSyncEnabled(true);
         //window.setFramerateLimit(60);
@@ -37,6 +38,13 @@ int main(int argc, char** argv)
         gridsprite.setOrigin(size.x / 2, size.y / 2);
         gridsprite.setPosition(window.getSize().x / 2, window.getSize().y / 2);
 
+        //Hit Spark
+        sf::Texture spark;
+        if(!spark.loadFromFile("blue_hit.png"))
+        {
+            std::cout<<"Error for spark image";
+            return -1;
+        }
         //FIghter 
 
         sf::Texture tplayer1;  //this is to import the player animation
@@ -49,7 +57,7 @@ int main(int argc, char** argv)
         //tplayer.setSmooth(true); //this is to blur the sprite to make it smooth.
 
         //PLayer.cpp//Player.h
-        Player player1(&tplayer1, sf::Vector2u(16, 10), 98.0f, true); //player1 vanne object create garyom.
+        Player player1(&tplayer1, sf::Vector2u(16, 10), 150.0f, true, &spark); //player1 vanne object create garyom.
 
 
         sf::Texture tplayer2;
@@ -61,7 +69,7 @@ int main(int argc, char** argv)
         tplayer2.setRepeated(true);
 
         //PLayer.cpp//Player.h
-        Player player2(&tplayer2, sf::Vector2u(16, 10), 98.0f, false);
+        Player player2(&tplayer2, sf::Vector2u(16, 10), 98.0f, false, &spark);
 
         float deltaTime = 0.f; //this is the difference in time to switch between frames
         sf::Clock clock;
@@ -85,14 +93,13 @@ int main(int argc, char** argv)
 
         Refree refree(500.0f, 500.0f);
         float totaltime{};
+
         while (window.isOpen())
         {
             timer90sec.update(static_cast<int>(clockForRoundTime.getElapsedTime().asSeconds()));
             deltaTime = clock.restart().asSeconds();
             // std::cout << deltaTime<<std::endl;
             sf::Event event;
-
-
             while (window.pollEvent(event))
             {
                 if (event.type == sf::Event::Closed || (clockForRoundTime.getElapsedTime().asSeconds()>90))
@@ -110,12 +117,13 @@ int main(int argc, char** argv)
             float p1_health = refree.getP1Health();
             float p2_health = refree.getP2Health();
 
-            if (Collision::checkCollision(player1.playerPosition(), player2.playerPosition())
-                && totaltime >= 0.15
-                && (player1.isFacingRIght() == true && player2.isFacingRIght() == false))
+            if  (Collision::checkCollision(player1.playerPosition(), player2.playerPosition())
+                && totaltime >= 0.35
+                && (player1.isFacingRIght() == true || player2.isFacingRIght() == false)
+                ) 
             {
                 totaltime = 0;
-                refree.mediate(player1.player_state, player2.player_state);
+                refree.mediate(player1.player_state, player2.player_state, player1.isImpactPhase(), player2.isImpactPhase());
             }
 
             player1.currentHealth(refree.getP1Health());

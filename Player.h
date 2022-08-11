@@ -4,6 +4,7 @@
 #include "Healthbar.h"
 #include <cmath>
 #include "PlayerState.h"
+#include "Impact_force.h"
 
 
 
@@ -12,7 +13,7 @@
 //     SINGLE_PUNCH,
 //     SPAM_PUNCH,
 // };
-class Player: protected Animation
+class Player: public Animation, public ImpactForce
 {
 private:
     sf::RectangleShape body;
@@ -24,7 +25,7 @@ private:
     const float maxHeight;
     const float floor;
 public:
-    Player(sf::Texture* texture, sf::Vector2u imageCount, float speed, bool playerORenemy);
+    Player(sf::Texture* texture, sf::Vector2u imageCount, float speed, bool playerORenemy, sf::Texture* spark);
     ~Player();
 
     void Update(float deltaTime, sf::Vector2u wsize, bool player_or_enemy, bool checkCollision);

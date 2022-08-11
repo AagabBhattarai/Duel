@@ -9,7 +9,7 @@ private:
     sf::Vector2u currentImage;
     float totalTime;
     static const float switchTime[10][16]; // Stores all the frames delay(i.e how long to display a particular frame)
-    // PlayerState previous_playerState;
+    PlayerState previous_playerState;
 
 public:
     Animation(sf::Texture* texture, sf::Vector2u imageCount);
@@ -21,5 +21,8 @@ public:
 protected:
     InputStatus input_status;
     bool reaction_done;
+    bool impact_phase;
+public:
+    bool isImpactPhase();
 };
 

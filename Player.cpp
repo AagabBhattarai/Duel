@@ -1,11 +1,12 @@
 
 #include "Player.h"
 
-Player::Player(sf::Texture* texture, sf::Vector2u imageCount, float speed, bool playerORenemy) :
+Player::Player(sf::Texture* texture, sf::Vector2u imageCount, float speed, bool playerORenemy, sf::Texture* spark) :
     Animation(texture, imageCount),
     healthbar(sf::Vector2f(500,30),sf::Vector2f(400,30),sf::Vector2f(500,30),playerORenemy),
     maxHeight{300.0f},
-    floor{450.0f}
+    floor{450.0f},
+    ImpactForce(spark)
 {
     this->speed = speed;
     faceRight = true;
@@ -88,9 +89,15 @@ void Player::Update(float deltaTime, sf::Vector2u wsize, bool player_or_enemy, b
 
     Animation::Update(player_state, deltaTime, faceRight);
     //spritesheet navigate
-    body.setTextureRect(uvRect);
+    body.setTextureRect(Animation::uvRect);
     body.move(velocity*deltaTime);
+    std::cout << "size:"<<body.getSize().x <<std::endl<< body.getSize().y;
+    std::cout << "\nOrigin:"<<body.getPosition().x <<std::endl<< body.getPosition().y;
 
+    if(faceRight)
+        ImpactForce::hit_spark.setPosition(body.getPosition().x + 125.f,body.getPosition().y - 70.f);
+    else
+        ImpactForce::hit_spark.setPosition(body.getPosition().x - 200.f,body.getPosition().y - 70.f);
 }
 
 void Player::currentHealth(float currentHealth)
@@ -120,6 +127,7 @@ void Player::Player1_input(bool player_or_enemy, sf::Vector2u wsize, bool checkC
             {
                 velocity.x -= speed;
                 player_state = PlayerState::WALK;
+                // faceRight = true;//Test with single direction movement
             }
         }
         else if(sf::Keyboard::isKeyPressed(sf::Keyboard::W) && canJump)
@@ -379,6 +387,7 @@ void Player::Draw(sf::RenderWindow& window)
 {
     healthbar.Draw(window);
     window.draw(body);
+    window.draw(ImpactForce::hit_spark);
 }
 
 

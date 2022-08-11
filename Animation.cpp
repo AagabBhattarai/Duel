@@ -7,14 +7,14 @@ const float Animation::switchTime[10][16]{
         // 1    2    3    4    5     6   7    8     9   10   11   12   13  14  15  
         {0.15,0.5,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15, 0 , 0 },//PUNCH-1
         // 1    2    3    4    5     6   7    8     9   10   11   12   13  14  15  
-        {0.01,0.015,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15, 0 , 0 },//WALK-2
+        {0.01,0.015,0.1,0.1,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15, 0 , 0 },//WALK-2
         // 1    2    3    4    5     6   7    8     9   10   11   12   13  14  15  
         {0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.1,0.1,0.1, 0 , 0 },//JUMP-3
         // 1    2    3    4    5     6   7    8     9   10   11   12   13  14  15        
         {0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15, 0 , 0 },//CROUCH-4
         // 1    2    3    4    5     6   7    8     9   10   11   12   13  14  15  
-        {0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15, 0 , 0 },//KICK-5
-        // 1    2    3    4    5     6   7    8     9   10   11   12   13  14  15  
+        {0.1,0.1,0.1,0.15,0.45,0.1,0.15,0.15,0.15,0.15,0.15,0.15,0.15, 0 , 0 },//KICK-5
+        // 1    2   3    4    5     6   7    8     9   10   11   12   13  14  15  
         {0.15,0.2,0.3,0.15,0.15,0.15,0.15,0.1,0.15,0.15,0.15,0.15,0.15, 0 , 0 },//REACTION-6
         // 1    2    3    4    5     6   7    8     9   10   11   12   13  14  15  
         {0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15, 0 , 0 },//STAND_BLOCK-7
@@ -37,6 +37,8 @@ Animation::Animation(sf::Texture* texture, sf::Vector2u imageCount)
     // previous_playerState=PlayerState::IDLE;
     input_status = InputStatus::isReleased;
     reaction_done = false;
+    impact_phase = false;
+    previous_playerState = PlayerState::IDLE;
 }
 
 Animation::~Animation()
@@ -49,7 +51,13 @@ void Animation::Update(PlayerState player_state, float deltaTime, bool faceRight
 
     currentImage.y = player_state;
     totalTime += deltaTime;
- 
+    
+    if(player_state != previous_playerState)
+    {
+        currentImage.x = 0;
+        previous_playerState = player_state;
+    }
+
     
     if (totalTime >= switchTime[player_state][currentImage.x])
     {
@@ -138,7 +146,15 @@ void Animation::Update(PlayerState player_state, float deltaTime, bool faceRight
        
     }
 
-        
+    if(switchTime[player_state][currentImage.x] > 0.4) 
+    {
+        impact_phase = true;
+    }
+    else
+    {
+        impact_phase = false;
+    }
+
     uvRect.top = currentImage.y * uvRect.height;
 
     if (faceRight)
@@ -152,6 +168,11 @@ void Animation::Update(PlayerState player_state, float deltaTime, bool faceRight
         uvRect.left = (currentImage.x + 1) * abs(uvRect.width);
         uvRect.width = -abs(uvRect.width);
     }
+}
+
+bool Animation::isImpactPhase()
+{
+    return impact_phase;
 }
 
 

@@ -17,21 +17,27 @@ float Refree::getP2Health()
     return p2_health;
 }
 
-void Refree::mediate(PlayerState p1_state, PlayerState p2_state)
+void Refree::mediate(PlayerState p1_state, PlayerState p2_state, bool p1_impact_phase, bool p2_impact_phase)
 {
-    if(p1_state == PlayerState::PUNCH && (p2_state != PlayerState::STAND_BLOCK) )
+    if(p1_state == PlayerState::PUNCH && (p2_state != PlayerState::STAND_BLOCK) && p1_impact_phase)
     {
         p2_health -=20;
         new_state_p2 = PlayerState::REACTION;
         new_state_p1 = p1_state;
     }
-    else if(p2_state == PlayerState::PUNCH && (p1_state != PlayerState::STAND_BLOCK) )
+    else if(p1_state == PlayerState::KICK && (p2_state != PlayerState::STAND_BLOCK) && p1_impact_phase)
+    {
+        p2_health -=20;
+        new_state_p2 = PlayerState::REACTION;
+        new_state_p1 = p1_state;
+    }
+    else if(p2_state == PlayerState::PUNCH && (p1_state != PlayerState::STAND_BLOCK) && p2_impact_phase)
     {
         p1_health -=20;
         new_state_p1 = PlayerState::REACTION;
         new_state_p2 = p2_state;
     }
-    else if(p2_state == PlayerState::KICK && (p1_state != PlayerState::STAND_BLOCK) )
+    else if(p2_state == PlayerState::KICK && (p1_state != PlayerState::STAND_BLOCK) &&p2_impact_phase )
     {
         p1_health -=20;
         new_state_p2 = p2_state;
