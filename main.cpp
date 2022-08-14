@@ -116,6 +116,7 @@ int main(int argc, char** argv)
         }
         sf::Sound punch_sound;
         punch_sound.setBuffer(punch_soundBuffer);
+        punch_sound.setPlayingOffset(sf::seconds(0.5f));
 
         sf::SoundBuffer end_soundBuffer;
         if(!end_soundBuffer.loadFromFile("End.ogg"))
@@ -239,12 +240,17 @@ int main(int argc, char** argv)
                     totaltime = 0;
                 }
                 player2.ImpactForce::Draw(window);
-                kick_sound.play();
+                
                 if(spark_count_p2 > 3)
                 {
                      refree.setP2_impact(false);
                      spark_count_p2 = 0;
                 }
+
+                if(player2.player_state == PlayerState::KICK)
+                    kick_sound.play();
+                else if (player2.player_state == PlayerState::PUNCH)
+                    punch_sound.play();
                 
             }
 
