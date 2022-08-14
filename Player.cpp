@@ -292,6 +292,7 @@ void Player::Player2_input(bool player_or_enemy, sf::Vector2u wsize, bool checkC
                 // velocity.x -= speed / 1000;
                 player_state = PlayerState::PUNCH;
                 Animation::input_status = isPressed;
+                faceRight = false;
             }
         }
         else if (sf::Keyboard::isKeyPressed(sf::Keyboard::O) && sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
@@ -397,7 +398,7 @@ float Player::playerPosition()
     return body.getPosition().x;
 }
 
-bool Player::isFacingRIght()
+bool Player::isFacingRight()
 {
     return faceRight;
 }

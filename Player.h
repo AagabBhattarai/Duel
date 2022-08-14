@@ -37,7 +37,7 @@ public:
     float playerPosition();
 
     void currentHealth(float currentHealth);
-    bool isFacingRIght();
+    bool isFacingRight();
 
 public:
     PlayerState player_state;

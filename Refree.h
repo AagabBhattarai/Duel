@@ -9,8 +9,8 @@ class Refree
         float p2_health;
         PlayerState new_state_p1;
         PlayerState new_state_p2;
-        bool p1_punch_hit_p2;
-        bool p2_punch_hit_p1;
+        bool p1_hit_p2;
+        bool p2_hit_p1;
 
     public:
         Refree(float p1_health, float p2_health);

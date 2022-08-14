@@ -22,7 +22,7 @@ int main(int argc, char** argv)
        
         sf::RenderWindow window(sf::VideoMode(1366, 704), "Duel");
         // window.setVerticalSyncEnabled(true);
-        //window.setFramerateLimit(60);
+        window.setFramerateLimit(60);
 
         sf::Vector2u wsize = window.getSize();
         std::cout << "Width " << wsize.x << "Height " << wsize.y;
@@ -88,15 +88,17 @@ int main(int argc, char** argv)
         }
         
 
-        //SOUND
+        //SOUND - SOUND
         sf::Music music;
         if(!music.openFromFile("music.wav"));
         {
             std::cout<<"error for background_music.wav opening";
             // return -2;s// program should terminate but terminates even though open for file is successful
         }
+        music.setVolume(30.0f);
         music.setLoop(true);
         music.play();
+
         sf::SoundBuffer kick_soundBuffer;
         if(!kick_soundBuffer.loadFromFile("Kick.ogg"))
         {
@@ -106,8 +108,23 @@ int main(int argc, char** argv)
         sf::Sound kick_sound;
         kick_sound.setBuffer(kick_soundBuffer);
         // kick_sound.setLoop(true);
-        
+        sf::SoundBuffer punch_soundBuffer;
+        if(!punch_soundBuffer.loadFromFile("Punch.ogg"))
+        {
+            std::cout << "Punch.ogg audio file problem";
+            return -2;
+        }
+        sf::Sound punch_sound;
+        punch_sound.setBuffer(punch_soundBuffer);
 
+        sf::SoundBuffer end_soundBuffer;
+        if(!end_soundBuffer.loadFromFile("End.ogg"))
+        {
+            std::cout << "End.ogg audio file problem";
+            return -2;
+        }
+        sf::Sound end_sound;
+        end_sound.setBuffer(end_soundBuffer);
     
 
 
@@ -122,7 +139,8 @@ int main(int argc, char** argv)
 
         //these following variables are for spark animaton
         float totaltime{};
-        int spark_count{0};
+        int spark_count_p1{0};
+        int spark_count_p2{0};
 
         while (window.isOpen())
         {
@@ -149,10 +167,9 @@ int main(int argc, char** argv)
 
             if  (Collision::checkCollision(player1.playerPosition(), player2.playerPosition())
                 && (player1.isTransitionPhase() || player2.isTransitionPhase())
-                && (player1.isFacingRIght() == true || player2.isFacingRIght() == false)
+                && ((player1.isFacingRight() == true||player1.isFacingRight() == false ) && player2.isFacingRight() == false) 
                 ) 
             {
-                // totaltime = 0;
                 refree.mediate(player1.player_state, player2.player_state, player1.isImpactPhase(), player2.isImpactPhase());
             }
 
@@ -188,33 +205,47 @@ int main(int argc, char** argv)
 
             //Following part checks if hit spark is to be shown or not (if there is an object to punch it shows)
             totaltime += deltaTime;
+            
             if(refree.getP1_impact() && player1.isImpactPhase())
             {
                 if(totaltime >= 0.1)
                 {
-                    spark_count++;
-                    player1.ImpactForce::Update(spark_count);
-                    totaltime = 0;
+                    spark_count_p1++;
+                    player1.ImpactForce::Update(spark_count_p1);
+                    totaltime =0;
                 }
                 player1.ImpactForce::Draw(window);
-                kick_sound.play();
-                if(spark_count > 3)
+                
+                if(spark_count_p1 > 3)
                 {
                      refree.setP1_impact(false);
-                     spark_count = 0;
+                     spark_count_p1 = 0;
                     //  kick_sound.stop();
                 }
-
+                if(player1.player_state == PlayerState::KICK)
+                    kick_sound.play();
+                else if (player1.player_state == PlayerState::PUNCH)
+                    punch_sound.play();
             }
-            if(refree.getP2_impact() && player2.isImpactPhase())
+
+
+            //FOR PLAYER2 SPARK
+            else if(refree.getP2_impact() && player2.isImpactPhase())
             {
                 if(totaltime >= 0.1)
                 {
-                    // spark_count++;
-                    player2.ImpactForce::Update(spark_count);
+                    spark_count_p2++;
+                    player2.ImpactForce::Update(spark_count_p2);
                     totaltime = 0;
                 }
                 player2.ImpactForce::Draw(window);
+                kick_sound.play();
+                if(spark_count_p2 > 3)
+                {
+                     refree.setP2_impact(false);
+                     spark_count_p2 = 0;
+                }
+                
             }
 
             window.display();
