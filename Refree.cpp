@@ -23,8 +23,8 @@ float Refree::getP2Health()
 void Refree::mediate(PlayerState p1_state, PlayerState p2_state, bool p1_impact_phase, bool p2_impact_phase)
 {
     //initally no player has struck a blow
-    // p1_punch_hit_p2 = false;
-    // p2_punch_hit_p1 = false;
+    p1_punch_hit_p2 = false;
+    p2_punch_hit_p1 = false;
 
     //check if any of the player has been struck
     if(p1_state == PlayerState::PUNCH && (p2_state != PlayerState::STAND_BLOCK) && p1_impact_phase)
@@ -71,9 +71,16 @@ bool Refree::getP1_impact()
 {
     return p1_punch_hit_p2;
 }
+void Refree::setP1_impact(bool set)
+{
+     p1_punch_hit_p2 = set;
+}
 
 bool Refree::getP2_impact()
 {
     return p2_punch_hit_p1;
 }
-
+void Refree::setP2_impact(bool set)
+{
+     p2_punch_hit_p1 = set;
+}

@@ -17,7 +17,11 @@ class Refree
         float getP1Health();
         float getP2Health();
         bool getP1_impact();
+        void setP1_impact(bool set);
+
         bool getP2_impact();
+        void setP2_impact(bool set);
+
 
         void mediate(PlayerState p1_state, PlayerState p2_state, bool p1_impact_phase, bool p2_impact_phase);
         PlayerState getNewState_p1();

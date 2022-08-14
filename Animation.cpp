@@ -147,6 +147,7 @@ void Animation::Update(PlayerState player_state, float deltaTime, bool faceRight
         
        
     }
+    
     float s2 = switchTime[player_state][currentImage.x];
     if((s2-s1)>0.15 && s2 > 0.25) // here 0.15 must be differnce between main impact frame and normal frame
     {

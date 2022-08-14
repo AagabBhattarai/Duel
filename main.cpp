@@ -2,12 +2,14 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
 #include <SFML/System.hpp>
+#include <SFML/Audio.hpp>
 #include <iostream>
 #include "Player.h"
 #include "Collision.h"
 #include "Refree.h"
 #include "Timer.h"
 #include "Initial.h"
+
 
 
 using namespace sf;
@@ -84,6 +86,30 @@ int main(int argc, char** argv)
             std::cout << "Calibri ttf";
             return -1;
         }
+        
+
+        //SOUND
+        sf::Music music;
+        if(!music.openFromFile("music.wav"));
+        {
+            std::cout<<"error for background_music.wav opening";
+            // return -2;s// program should terminate but terminates even though open for file is successful
+        }
+        music.setLoop(true);
+        music.play();
+        sf::SoundBuffer kick_soundBuffer;
+        if(!kick_soundBuffer.loadFromFile("Kick.ogg"))
+        {
+            std::cout << "Kick audio file problem";
+            return -2;
+        }
+        sf::Sound kick_sound;
+        kick_sound.setBuffer(kick_soundBuffer);
+        // kick_sound.setLoop(true);
+        
+
+    
+
 
         Timer timer90sec(font, clockForRoundTime.getElapsedTime().asSeconds());
         window.setKeyRepeatEnabled(false);
@@ -97,6 +123,7 @@ int main(int argc, char** argv)
         //these following variables are for spark animaton
         float totaltime{};
         int spark_count{0};
+
         while (window.isOpen())
         {
             timer90sec.update(static_cast<int>(clockForRoundTime.getElapsedTime().asSeconds()));
@@ -148,10 +175,11 @@ int main(int argc, char** argv)
             //also draw priortiy wise 1st background then on and on
             
 
-
+            //HERE YOU CAN CALL THE CASE FOR WHEN HEALTH IS ZERO
             if(refree.getP1Health() <0 ||refree.getP2Health() <0)   
                 window.close();
-            
+            //END SCRREN PART PART ENDS
+            // ADD CONDTION IF END SCREEN PART IF TRUE THEN WHAT TO DO
             window.clear();
             window.draw(gridsprite);
             timer90sec.Draw(window);
@@ -169,12 +197,20 @@ int main(int argc, char** argv)
                     totaltime = 0;
                 }
                 player1.ImpactForce::Draw(window);
+                kick_sound.play();
+                if(spark_count > 3)
+                {
+                     refree.setP1_impact(false);
+                     spark_count = 0;
+                    //  kick_sound.stop();
+                }
+
             }
             if(refree.getP2_impact() && player2.isImpactPhase())
             {
                 if(totaltime >= 0.1)
                 {
-                    spark_count++;
+                    // spark_count++;
                     player2.ImpactForce::Update(spark_count);
                     totaltime = 0;
                 }
@@ -182,7 +218,6 @@ int main(int argc, char** argv)
             }
 
             window.display();
-
         }
     }
     return 0;
