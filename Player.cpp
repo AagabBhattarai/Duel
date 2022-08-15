@@ -74,7 +74,7 @@ void Player::Update(float deltaTime, sf::Vector2u wsize, bool player_or_enemy, b
     {
         if( (body.getPosition().y) - maxHeight > 0 && !gravity_starts)
         {
-            velocity.y =  (maxHeight -body.getPosition().y) * 5;
+            velocity.y =  (maxHeight -body.getPosition().y) * 4;
             // velocity.y =  -61;
 
             if(body.getPosition().y < 380)
@@ -82,7 +82,7 @@ void Player::Update(float deltaTime, sf::Vector2u wsize, bool player_or_enemy, b
         }
         if( floor - body.getPosition().y > 0 && gravity_starts == true)
         {
-            velocity.y = (floor - body.getPosition().y )*10 ;
+            velocity.y = (floor - body.getPosition().y ) * 4 ;
             // velocity.y =  +61;
 
             if(body.getPosition().y > floor || abs(body.getPosition().y - 500.0f) <5 )
