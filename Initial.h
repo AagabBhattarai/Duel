@@ -6,4 +6,5 @@ class Initial
 {
 public:
 	static int showMainMenu();
+	static int showExitPage();
 };
