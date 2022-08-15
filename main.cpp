@@ -29,6 +29,9 @@ int main(int argc, char** argv)
 
             sf::Vector2u wsize = window.getSize();
             std::cout << "Width " << wsize.x << "Height " << wsize.y;
+            
+            //VIEWs
+            sf::View view (sf::FloatRect(0.f,0.f,1326.f, 704.f));
 
             sf::Texture grid;
             if (!grid.loadFromFile("japan.gif"))
@@ -153,7 +156,8 @@ int main(int argc, char** argv)
             int spark_count_p2{0};
             
             //game loop starts now
-
+            view.setCenter(sf::Vector2f(wsize.x/2,wsize.y/2));
+            window.setView(view);
             while (window.isOpen())
             {
                 timer90sec.update(static_cast<int>(clockForRoundTime.getElapsedTime().asSeconds()));
@@ -206,9 +210,11 @@ int main(int argc, char** argv)
                 //spark part
                 //this is remnants of the part to tell you that anything that must be drawn should be after window.clear
                 //also draw priortiy wise 1st background then on and on
-                
 
-                
+
+                //view
+                // view.setCenter(sf::Vector2f(wsize.x/2,wsize.y/2));
+                // window.setView(view);
                 window.clear();
                 window.draw(gridsprite);
                 timer90sec.Draw(window);
@@ -227,11 +233,16 @@ int main(int argc, char** argv)
                         totaltime =0;
                     }
                     player1.ImpactForce::Draw(window);
-                    
+                    // view.zoom(0.99);
+                    view.setCenter(sf::Vector2f((wsize.x/2)+20,wsize.y/2));
+                    window.setView(view);
+
                     if(spark_count_p1 > 3)
                     {
                         refree.setP1_impact(false);
                         spark_count_p1 = 0;
+                        view.setCenter(sf::Vector2f(wsize.x/2,wsize.y/2));
+                        window.setView(view);
                         //  kick_sound.stop();
                     }
                     if(player1.player_state == PlayerState::KICK)
@@ -251,11 +262,14 @@ int main(int argc, char** argv)
                         totaltime = 0;
                     }
                     player2.ImpactForce::Draw(window);
-                    
+                    view.setCenter(sf::Vector2f((wsize.x/2)-20,wsize.y/2));
+                    window.setView(view);
                     if(spark_count_p2 > 3)
                     {
                         refree.setP2_impact(false);
                         spark_count_p2 = 0;
+                        view.setCenter(sf::Vector2f(wsize.x/2,wsize.y/2));
+                        window.setView(view);
                     }
 
                     if(player2.player_state == PlayerState::KICK)
@@ -264,7 +278,7 @@ int main(int argc, char** argv)
                         punch_sound.play();
                     
                 }
-
+                window.setView(view);
                 window.display();
                 //HERE YOU CAN CALL THE CASE FOR WHEN HEALTH IS ZERO
                 if(refree.getP1Health() <0 ||refree.getP2Health() <0)
