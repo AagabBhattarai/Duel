@@ -1,5 +1,6 @@
 
 #include "Initial.h"
+#include "exitpage.h"
 
 using namespace sf;
 
@@ -117,4 +118,121 @@ int Initial::showMainMenu()//main page
 		MENU.display();
 	}
 	return 3;
+}
+
+int Initial::showExitPage()
+{
+	//make a exit window
+	RenderWindow EXIT(VideoMode(1366, 704), "Duel", Style::Default);
+	exitpage exitpage(EXIT.getSize().x, EXIT.getSize().y);
+
+	//set background
+
+	RectangleShape background;
+	background.setSize(Vector2f(1366, 704));
+	Texture Maintexture;
+	Maintexture.loadFromFile("exit.png");
+	background.setTexture(&Maintexture);
+
+	//photo to the game
+
+	while (EXIT.isOpen())
+	{
+		Event event;
+		while (EXIT.pollEvent(event))
+		{
+			if (event.type == Event::Closed)
+			{
+				EXIT.close();
+			}
+			if (event.type == Event::KeyReleased)
+			{
+				if (event.key.code == Keyboard::Up)
+				{
+					exitpage.MoveUp();
+					break;
+				}
+				if (event.key.code == Keyboard::Down)
+				{
+					exitpage.MoveDown();
+					break;
+				}
+				if (event.key.code == Keyboard::Return)
+				{
+					//RenderWindow Play(VideoMode(1366, 704), "game_name");
+					//RenderWindow OPTIONS(VideoMode(1366, 704), "OPTIONS");
+					//RenderWindow ABOUT(VideoMode(1366, 704), "ABOUT");
+
+					int x = exitpage.MainMenuPressed();
+					if (x == 0)
+					{
+						return 1;
+					}
+					/*
+					if (x == 1)
+					{
+						while (OPTIONS.isOpen())
+						{
+							Event aevent;
+							while (OPTIONS.pollEvent(aevent))
+							{
+								if (aevent.type == Event::Closed)
+								{
+									OPTIONS.close();
+								}
+								if (aevent.type == Event::KeyPressed)
+								{
+									if (aevent.key.code == Keyboard::Escape)
+									{
+										OPTIONS.close();
+									}
+								}
+							}
+							//Play.close();
+							OPTIONS.clear();
+							ABOUT.close();
+
+							OPTIONS.display();
+						}
+					}
+					if (x == 2)
+					{
+						while (ABOUT.isOpen())
+						{
+							Event aevent;
+							while (ABOUT.pollEvent(aevent))
+							{
+								if (aevent.type == Event::Closed)
+								{
+									ABOUT.close();
+								}
+								if (aevent.type == Event::KeyPressed)
+								{
+									if (aevent.key.code == Keyboard::Escape)
+									{
+										ABOUT.close();
+									}
+								}
+							}
+							//	Play.close();
+							OPTIONS.clear();
+							ABOUT.clear();
+
+							ABOUT.display();
+						}
+					}
+					*/
+					if (x == 1)
+						EXIT.close();
+					break;
+				}
+
+			}
+		}
+		EXIT.clear();
+		EXIT.draw(background);
+		exitpage.draw(EXIT);
+		EXIT.display();
+	}
+	return 5; //random
 }
