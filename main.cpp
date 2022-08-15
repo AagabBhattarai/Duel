@@ -31,7 +31,7 @@ int main(int argc, char** argv)
             std::cout << "Width " << wsize.x << "Height " << wsize.y;
             
             //VIEWs
-            sf::View view (sf::FloatRect(0.f,0.f,1326.f, 704.f));
+            sf::View view (sf::FloatRect(0.f,0.f,1326.f, 690.f));
 
             sf::Texture grid;
             if (!grid.loadFromFile("japan.gif"))
@@ -262,13 +262,15 @@ int main(int argc, char** argv)
                         totaltime = 0;
                     }
                     player2.ImpactForce::Draw(window);
-                    view.setCenter(sf::Vector2f((wsize.x/2)-20,wsize.y/2));
+                    // view.setCenter(sf::Vector2f((wsize.x/2)-20,wsize.y/2));
+                    view.setRotation(1.f);
                     window.setView(view);
                     if(spark_count_p2 > 3)
                     {
                         refree.setP2_impact(false);
                         spark_count_p2 = 0;
                         view.setCenter(sf::Vector2f(wsize.x/2,wsize.y/2));
+                        view.setRotation(0.f);
                         window.setView(view);
                     }
 
