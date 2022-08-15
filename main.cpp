@@ -99,6 +99,8 @@ int main(int argc, char** argv)
         music.setLoop(true);
         music.play();
 
+
+        //KICK SOUND
         sf::SoundBuffer kick_soundBuffer;
         if(!kick_soundBuffer.loadFromFile("Kick.ogg"))
         {
@@ -108,6 +110,9 @@ int main(int argc, char** argv)
         sf::Sound kick_sound;
         kick_sound.setBuffer(kick_soundBuffer);
         // kick_sound.setLoop(true);
+
+
+        //PUNCH SOUND
         sf::SoundBuffer punch_soundBuffer;
         if(!punch_soundBuffer.loadFromFile("Punch.ogg"))
         {
@@ -118,6 +123,8 @@ int main(int argc, char** argv)
         punch_sound.setBuffer(punch_soundBuffer);
         punch_sound.setPlayingOffset(sf::seconds(0.5f));
 
+
+        //MATCH END SOUND
         sf::SoundBuffer end_soundBuffer;
         if(!end_soundBuffer.loadFromFile("End.ogg"))
         {
@@ -147,6 +154,10 @@ int main(int argc, char** argv)
         {
             timer90sec.update(static_cast<int>(clockForRoundTime.getElapsedTime().asSeconds()));
             deltaTime = clock.restart().asSeconds();
+
+            if(clockForRoundTime.getElapsedTime().asSeconds()  < 2)
+                end_sound.play();
+
             // std::cout << deltaTime<<std::endl;
             sf::Event event;
             while (window.pollEvent(event))
@@ -194,10 +205,18 @@ int main(int argc, char** argv)
             
 
             //HERE YOU CAN CALL THE CASE FOR WHEN HEALTH IS ZERO
-            if(refree.getP1Health() <0 ||refree.getP2Health() <0)   
+            if(refree.getP1Health() <0 ||refree.getP2Health() <0)
+            {
+                end_sound.play();
                 window.close();
+            }
+            
             //END SCRREN PART PART ENDS
             // ADD CONDTION IF END SCREEN PART IF TRUE THEN WHAT TO DO
+
+
+
+
             window.clear();
             window.draw(gridsprite);
             timer90sec.Draw(window);

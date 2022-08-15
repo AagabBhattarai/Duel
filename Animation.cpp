@@ -4,16 +4,16 @@
 const float Animation::switchTime[10][16]{
         // 1    2    3    4    5     6   7    8     9   10   11   12   13  14   15   
         {0.1,0.1, 0.1 , 0.1 ,0.1 ,0.1 ,0.1 ,0.1 ,0.1 ,0.15,0.15,0.15,0.1, 0 , 0 },//IDLE-0
-        // 1    2    3    4    5     6   7    8     9   10   11   12   13  14  15  
-        {0.15,0.5,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15, 0 , 0 },//PUNCH-1
+        // 1    2    3    4      5      6      7     8      9     10      11      12     13   14  15  
+        {0.15, 0.5 ,0.15, 0.15, 0.15 , 0.5  , 0.15, 0.15 , 0.15 , 0.15  , 0.5 , 0.15 , 0.15, 0 , 0 },//PUNCH-1
         // 1    2    3    4    5     6   7    8     9   10   11   12   13  14  15  
         {0.01,0.015,0.1,0.1,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15, 0 , 0 },//WALK-2
         // 1    2    3    4    5     6   7    8     9   10   11   12   13  14  15  
         {0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.1,0.1,0.1, 0 , 0 },//JUMP-3
         // 1    2    3    4    5     6   7    8     9   10   11   12   13  14  15        
         {0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15, 0 , 0 },//CROUCH-4
-        // 1    2    3    4    5     6   7    8     9   10   11   12   13  14  15  
-        {0.1,0.1,0.1,0.15,0.45,0.1,0.15,0.15,0.15,0.15,0.15,0.15,0.15, 0 , 0 },//KICK-5
+        // 1    2     3       4       5      6         7    8      9      10     11     12     13   14   15  
+        {0.1  ,0.1,  0.4 ,  0.15 ,  0.15  ,  0.1 ,  0.40 , 0.15 ,  0.1  , 0.1 , 0.15, 0.15, 0.15,  0 , 0 },//KICK-5
         // 1    2   3    4    5     6   7    8     9   10   11   12   13  14  15  
         {0.15,0.2,0.3,0.15,0.15,0.15,0.15,0.1,0.15,0.15,0.15,0.15,0.15, 0 , 0 },//REACTION-6
         // 1    2    3    4    5     6   7    8     9   10   11   12   13  14  15  
@@ -80,7 +80,7 @@ void Animation::Update(PlayerState player_state, float deltaTime, bool faceRight
 
         else if(currentImage.y == PUNCH)
         {
-            if(currentImage.x >2)
+            if(currentImage.x >12)
             {
                 currentImage.x = 0;
                 currentImage.y = IDLE;
@@ -111,7 +111,7 @@ void Animation::Update(PlayerState player_state, float deltaTime, bool faceRight
         {
             // if(currentImage.x=0)    
             //     currentImage.x=8;
-            if(currentImage.x >=8)
+            if(currentImage.x > 9)
             {
                 currentImage.x = 0;
                 currentImage.y = IDLE;
@@ -159,7 +159,7 @@ void Animation::Update(PlayerState player_state, float deltaTime, bool faceRight
     }
 
     //this part is to know in which frame player actually exerts his force
-    if(switchTime[player_state][currentImage.x] > 0.3) 
+    if(switchTime[player_state][currentImage.x] > 0.25) 
     {
         impact_phase = true;
     }
