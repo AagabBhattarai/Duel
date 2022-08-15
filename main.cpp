@@ -98,7 +98,7 @@ int main(int argc, char** argv)
                 std::cout<<"error for background_music.wav opening";
                 // return -2;s// program should terminate but terminates even though open for file is successful
             }
-            music.setVolume(30.0f);
+            music.setVolume(10.0f);
             music.setLoop(true);
             music.play();
 
@@ -136,6 +136,7 @@ int main(int argc, char** argv)
             }
             sf::Sound end_sound;
             end_sound.setBuffer(end_soundBuffer);
+            end_sound.setPlayingOffset(sf::seconds(0.5f));
         
 
 
@@ -159,8 +160,8 @@ int main(int argc, char** argv)
                 timer90sec.update(static_cast<int>(clockForRoundTime.getElapsedTime().asSeconds()));
                 deltaTime = clock.restart().asSeconds();
 
-                if(clockForRoundTime.getElapsedTime().asSeconds()  < 2)
-                    end_sound.play();
+                // if(clockForRoundTime.getElapsedTime().asSeconds()  < 2)
+                //     end_sound.play();
 
                 // std::cout << deltaTime<<std::endl;
                 sf::Event event;
@@ -267,8 +268,15 @@ int main(int argc, char** argv)
 
                 window.display();
                 //HERE YOU CAN CALL THE CASE FOR WHEN HEALTH IS ZERO
-                if(refree.getP1Health() <0 ||refree.getP2Health() <0)
+                if(refree.getP1Health() <0)
                 {
+                    // p2_wins
+                    // this line doesn't work
+                    break;
+                }
+                if(refree.getP2Health() <0)
+                {
+                    // p2_wins
                     // this line doesn't work
                     break;
                 }
@@ -277,6 +285,7 @@ int main(int argc, char** argv)
                 // ADD CONDTION IF END SCREEN PART IF TRUE THEN WHAT TO DO
             }
             end_sound.play(); 
+    
 
 
         }

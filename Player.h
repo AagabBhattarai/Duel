@@ -18,6 +18,7 @@ private:
     bool playerORenemy;
     const float maxHeight;
     const float floor;
+    bool gravity_starts;
 public:
     Player(sf::Texture* texture, sf::Vector2u imageCount, float speed, bool playerORenemy, sf::Texture* spark);
     ~Player();

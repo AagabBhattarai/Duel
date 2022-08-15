@@ -23,6 +23,7 @@ Player::Player(sf::Texture* texture, sf::Vector2u imageCount, float speed, bool 
 
     player_state = IDLE;
     canJump = true;
+    gravity_starts = false;
 }
 
 Player::~Player(){}
@@ -51,7 +52,6 @@ void Player::Update(float deltaTime, sf::Vector2u wsize, bool player_or_enemy, b
     else    
         Animation::reaction_done = false;
 
-    //REACTION RECOIL WORK
    
     //For player 1
     
@@ -70,22 +70,27 @@ void Player::Update(float deltaTime, sf::Vector2u wsize, bool player_or_enemy, b
         }
     }
    
-    // std::cout<<body.getPosition().y<<std::endl;
-    // if (velocity.y !=0)
-    // {
-    //     // velocity.y = 0;
-    //     // body.setPosition(body.getPosition().x, 450.0f);
-    //     velocity.y += 981.0f * 0.5;
-    // }
-    // else
-    // {
-    //     velocity.y =0;
-    // }
-   // if (velocity.x == 0.0f && velocity.y ==0.0f)
-    //{
-      //  player_state = PlayerState::IDLE;
-    //}
-    std::cout<<body.getPosition().y<<std::endl;
+    if(player_state == PlayerState::JUMP)
+    {
+        if( (body.getPosition().y) - maxHeight > 0 && !gravity_starts)
+        {
+            velocity.y =  (maxHeight -body.getPosition().y) * 5;
+            // velocity.y =  -61;
+
+            if(body.getPosition().y < 380)
+                gravity_starts = true;
+        }
+        if( floor - body.getPosition().y > 0 && gravity_starts == true)
+        {
+            velocity.y = (floor - body.getPosition().y )*10 ;
+            // velocity.y =  +61;
+
+            if(body.getPosition().y > floor || abs(body.getPosition().y - 500.0f) <5 )
+                gravity_starts = false;
+        }
+    }
+   
+    std::cout<<body.getPosition().y<<std::endl<<deltaTime<<std::endl;
 
     if (velocity.x > 0.0f)
         faceRight = true;
@@ -143,7 +148,7 @@ void Player::Player1_input(bool player_or_enemy, sf::Vector2u wsize, bool checkC
         {
             // canJump = false;
              player_state = JUMP;
-          // velocity.y = -sqrtf(2.0 * 981.f * maxHeight);
+            velocity.y = -100;
             //velocity.x = 0.001;
             Animation::input_status = isPressed;
         }
