@@ -91,8 +91,12 @@ void Player::Update(float deltaTime, sf::Vector2u wsize, bool player_or_enemy, b
     else if (velocity.x < 0.0f)
         faceRight = false;
 
+    if(player_or_enemy)
+        Animation::Update_p1(player_state, deltaTime, faceRight);
+    else if(!player_or_enemy) //not of player_or enemy means it's player 2
+        Animation::Update_p2(player_state, deltaTime, faceRight);
 
-    Animation::Update(player_state, deltaTime, faceRight);
+
     //spritesheet navigate
     body.setTextureRect(Animation::uvRect);
     body.move(velocity*deltaTime);

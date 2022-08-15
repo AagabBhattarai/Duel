@@ -8,6 +8,7 @@
 #include "Collision.h"
 #include "Refree.h"
 #include "Timer.h"
+#include "Impact_force.h"
 #include "Initial.h"
 
 
@@ -138,7 +139,6 @@ int main(int argc, char** argv)
 
         Timer timer90sec(font, clockForRoundTime.getElapsedTime().asSeconds());
         window.setKeyRepeatEnabled(false);
-        //game loop starts now
 
 
         //For Refree;
@@ -149,6 +149,8 @@ int main(int argc, char** argv)
         float totaltime{};
         int spark_count_p1{0};
         int spark_count_p2{0};
+        
+        //game loop starts now
 
         while (window.isOpen())
         {
@@ -207,7 +209,7 @@ int main(int argc, char** argv)
             //HERE YOU CAN CALL THE CASE FOR WHEN HEALTH IS ZERO
             if(refree.getP1Health() <0 ||refree.getP2Health() <0)
             {
-                end_sound.play();
+                end_sound.play(); // this line doesn't work
                 window.close();
             }
             
