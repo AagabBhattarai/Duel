@@ -131,7 +131,7 @@ int main(int argc, char** argv)
             sf::SoundBuffer end_soundBuffer;
             if(!end_soundBuffer.loadFromFile("End.ogg"))
             {
-                std::cout << "End.ogg audio file problem";
+                std::cout << "End.ogg audio file probtttttttlem";
                 return -2;
             }
             sf::Sound end_sound;
