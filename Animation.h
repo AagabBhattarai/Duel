@@ -27,6 +27,7 @@ protected:
     bool reaction_done;
     bool impact_phase;
     bool transition_phase;
+    bool combo_move;
 public:
     bool isImpactPhase();
     bool isTransitionPhase();

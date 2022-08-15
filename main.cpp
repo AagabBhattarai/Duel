@@ -183,10 +183,10 @@ int main(int argc, char** argv)
 
                 if  (Collision::checkCollision(player1.playerPosition(), player2.playerPosition())
                     && (player1.isTransitionPhase() || player2.isTransitionPhase())
-                    && ((player1.isFacingRight() == true||player1.isFacingRight() == false ) && player2.isFacingRight() == false) 
                     ) 
+                    
                 {
-                    refree.mediate(player1.player_state, player2.player_state, player1.isImpactPhase(), player2.isImpactPhase());
+                    refree.mediate(player1.player_state, player2.player_state, player1.isImpactPhase(), player2.isImpactPhase(), player1.isFacingRight(),!(player2.isFacingRight()));
                 }
 
                 //Health update part

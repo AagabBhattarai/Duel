@@ -7,12 +7,6 @@
 #include "Impact_force.h"
 
 
-
-// enum PlayerAction
-// {
-//     SINGLE_PUNCH,
-//     SPAM_PUNCH,
-// };
 class Player: public Animation, public ImpactForce
 {
 private:

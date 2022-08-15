@@ -103,18 +103,36 @@ void Animation::Update_p1(PlayerState player_state, float deltaTime, bool faceRi
         }
 
         else if(currentImage.y == PUNCH)
-        {
-            if(currentImage.x >12)
+        {   
+            if(combo_move == true)
             {
-                currentImage.x = 0;
-                currentImage.y = IDLE;
-                input_status = isReleased;
-            }
-            else
-            {
-                 currentImage.y=PUNCH;
+                if(currentImage.x >12)
+                {
+                    currentImage.x = 0;
+                    currentImage.y = IDLE;
+                    input_status = isReleased;
+                }
+                else
+                {
+                    currentImage.y=PUNCH;
 
-            } 
+                } 
+            }
+            else if(combo_move == false)
+            {
+                
+                if(currentImage.x >2)
+                {
+                    currentImage.x = 0;
+                    currentImage.y = IDLE;
+                    input_status = isReleased;
+                }
+                else
+                {
+                    currentImage.y=PUNCH;
+
+                } 
+            }
         }
 
         else if (currentImage.y == JUMP)
@@ -133,17 +151,38 @@ void Animation::Update_p1(PlayerState player_state, float deltaTime, bool faceRi
         }
         else if(currentImage.y == KICK)
         {
-            // if(currentImage.x=0)    
-            //     currentImage.x=8;
-            if(currentImage.x > 9)
+            if(combo_move == true)
             {
-                currentImage.x = 0;
-                currentImage.y = IDLE;
-                input_status = isReleased;
+                if(currentImage.x >9)
+                {
+                    currentImage.x = 0;
+                    currentImage.y = IDLE;
+                    input_status = isReleased;
+                }
+                else
+                {
+                    currentImage.y=PUNCH;
 
+                } 
             }
-            
+            else if(combo_move == false)
+            {
+                
+                if(currentImage.x >3)
+                {
+                    currentImage.x = 0;
+                    currentImage.y = IDLE;
+                    input_status = isReleased;
+                }
+                else
+                {
+                    currentImage.y=PlayerState::KICK;
+
+                } 
+            }
+  
         }
+        
         else if(currentImage.y == CROUCH)
         {
             if(currentImage.x >=2)
