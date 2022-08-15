@@ -7,12 +7,6 @@
 #include "Impact_force.h"
 
 
-
-// enum PlayerAction
-// {
-//     SINGLE_PUNCH,
-//     SPAM_PUNCH,
-// };
 class Player: public Animation, public ImpactForce
 {
 private:
@@ -24,6 +18,7 @@ private:
     bool playerORenemy;
     const float maxHeight;
     const float floor;
+    bool gravity_starts;
 public:
     Player(sf::Texture* texture, sf::Vector2u imageCount, float speed, bool playerORenemy, sf::Texture* spark);
     ~Player();

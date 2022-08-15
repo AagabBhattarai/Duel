@@ -23,7 +23,7 @@ class Refree
         void setP2_impact(bool set);
 
 
-        void mediate(PlayerState p1_state, PlayerState p2_state, bool p1_impact_phase, bool p2_impact_phase);
+        void mediate(PlayerState p1_state, PlayerState p2_state, bool p1_impact_phase, bool p2_impact_phase, bool p1_right_facing, bool p2_left_facing);
         PlayerState getNewState_p1();
         PlayerState getNewState_p2();
 

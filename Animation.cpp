@@ -32,8 +32,8 @@ const float Animation::switchTime_p2[10][16]{
         {0.15, 0.5 ,0.15, 0.15, 0.15 , 0.5  , 0.15, 0.15 , 0.15 , 0.15  , 0.5 , 0.15 , 0.15, 0 , 0 },//PUNCH-1
         // 1    2    3    4    5     6   7    8     9   10   11   12   13  14  15  
         {0.01,0.015,0.1,0.1,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15, 0 , 0 },//WALK-2
-        // 1    2    3    4    5     6   7    8     9   10   11   12   13  14  15  
-        {0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.1,0.1,0.1, 0 , 0 },//JUMP-3
+        // 1    2    3    4     5     6   7    8     9   10   11   12   13  14  15  
+        {0.15 ,0.15,0.15,0.15, 0.15,0.15,0.15, 0.15 , 0.15  ,0.15,0.1,0.1,0.1, 0 , 0 },//JUMP-3
         // 1    2    3    4    5     6   7    8     9   10   11   12   13  14  15        
         {0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15, 0 , 0 },//CROUCH-4
         // 1    2     3       4       5      6         7    8      9      10     11     12     13   14   15  
@@ -103,23 +103,41 @@ void Animation::Update_p1(PlayerState player_state, float deltaTime, bool faceRi
         }
 
         else if(currentImage.y == PUNCH)
-        {
-            if(currentImage.x >12)
+        {   
+            if(combo_move == true)
             {
-                currentImage.x = 0;
-                currentImage.y = IDLE;
-                input_status = isReleased;
-            }
-            else
-            {
-                 currentImage.y=PUNCH;
+                if(currentImage.x >12)
+                {
+                    currentImage.x = 0;
+                    currentImage.y = IDLE;
+                    input_status = isReleased;
+                }
+                else
+                {
+                    currentImage.y=PUNCH;
 
-            } 
+                } 
+            }
+            else if(combo_move == false)
+            {
+                
+                if(currentImage.x >2)
+                {
+                    currentImage.x = 0;
+                    currentImage.y = IDLE;
+                    input_status = isReleased;
+                }
+                else
+                {
+                    currentImage.y=PUNCH;
+
+                } 
+            }
         }
 
         else if (currentImage.y == JUMP)
         {
-            if(currentImage.x >=8)
+            if(currentImage.x >8)
             {
                 currentImage.x=0;
                 currentImage.y = IDLE;
@@ -133,17 +151,38 @@ void Animation::Update_p1(PlayerState player_state, float deltaTime, bool faceRi
         }
         else if(currentImage.y == KICK)
         {
-            // if(currentImage.x=0)    
-            //     currentImage.x=8;
-            if(currentImage.x > 9)
+            if(combo_move == true)
             {
-                currentImage.x = 0;
-                currentImage.y = IDLE;
-                input_status = isReleased;
+                if(currentImage.x >9)
+                {
+                    currentImage.x = 0;
+                    currentImage.y = IDLE;
+                    input_status = isReleased;
+                }
+                else
+                {
+                    currentImage.y=PUNCH;
 
+                } 
             }
-            
+            else if(combo_move == false)
+            {
+                
+                if(currentImage.x >3)
+                {
+                    currentImage.x = 0;
+                    currentImage.y = IDLE;
+                    input_status = isReleased;
+                }
+                else
+                {
+                    currentImage.y=PlayerState::KICK;
+
+                } 
+            }
+  
         }
+        
         else if(currentImage.y == CROUCH)
         {
             if(currentImage.x >=2)
