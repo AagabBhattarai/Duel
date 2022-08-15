@@ -131,7 +131,7 @@ int Initial::showExitPage()
 	RectangleShape background;
 	background.setSize(Vector2f(1366, 704));
 	Texture Maintexture;
-	Maintexture.loadFromFile("exit.png");
+	Maintexture.loadFromFile("grid.jpg");
 	background.setTexture(&Maintexture);
 
 	//photo to the game
