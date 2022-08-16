@@ -13,7 +13,7 @@ void Timer::update(int time)
     this->time = 90-time;
     std::string str = std::to_string(this->time);
     text.setString(str);
-    text.setCharacterSize(50);
+    text.setCharacterSize(90);
     text.setFillColor(sf::Color::Red);
     text.setPosition(658,10);
     text.setStyle(sf::Text::Bold);
