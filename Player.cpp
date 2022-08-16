@@ -74,23 +74,30 @@ void Player::Update(float deltaTime, sf::Vector2u wsize, bool player_or_enemy, b
     {
         if( (body.getPosition().y) - maxHeight > 0 && !gravity_starts)
         {
-            velocity.y =  (maxHeight -body.getPosition().y) * 4;
+            velocity.y =  (maxHeight -body.getPosition().y) * 6;
             // velocity.y =  -61;
 
-            if(body.getPosition().y < 380)
+            if(body.getPosition().y < 377)
+            {
                 gravity_starts = true;
+                body.setPosition(body.getPosition().x,376.0f);
+            }
         }
         if( floor - body.getPosition().y > 0 && gravity_starts == true)
         {
-            velocity.y = (floor - body.getPosition().y ) * 4 ;
+            velocity.y = 100/((floor - body.getPosition().y ) * 0.007);
             // velocity.y =  +61;
 
             if(body.getPosition().y > floor || abs(body.getPosition().y - 500.0f) <5 )
+            {
+                body.setPosition(body.getPosition().x,500.0f);
+                player_state= IDLE;
                 gravity_starts = false;
+            }
         }
     }
    
-    std::cout<<body.getPosition().y<<std::endl<<deltaTime<<std::endl;
+    // std::cout<<body.getPosition().y<<std::endl;
 
     if (velocity.x > 0.0f)
         faceRight = true;
@@ -299,7 +306,7 @@ void Player::Player1_input(bool player_or_enemy, sf::Vector2u wsize, bool checkC
 
 void Player::Player2_input(bool player_or_enemy, sf::Vector2u wsize, bool checkCollision)
 {
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::P ) &&sf::Keyboard::isKeyPressed(sf::Keyboard::Right ) )
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::P ) &&sf::Keyboard::isKeyPressed(sf::Keyboard::Right ) )
         {
             if (body.getPosition().x - body.getSize().x/2 <= 0)
                 velocity.x = 0;
@@ -307,6 +314,18 @@ void Player::Player2_input(bool player_or_enemy, sf::Vector2u wsize, bool checkC
             {
                 velocity.x += speed / 1000;
                 player_state = PlayerState::STAND_BLOCK;
+            }
+        }
+
+        else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
+        {
+            if (body.getPosition().x + body.getSize().x/2 >= wsize.x)
+                velocity.x = 0.f;
+            else
+            {
+              
+                player_state = PlayerState::POWER;
+                Animation::input_status = isPressed;
             }
         }
 
@@ -388,6 +407,8 @@ void Player::Player2_input(bool player_or_enemy, sf::Vector2u wsize, bool checkC
         {
             canJump = true;
             player_state = JUMP;
+            Animation::input_status = isPressed;
+
            // velocity.y = -sqrtf(2.0 * 981.f * maxHeight);
            // velocity.x = -0.001;
         }
@@ -442,10 +463,20 @@ void Player::Draw(sf::RenderWindow& window)
 
 
 
-float Player::playerPosition()
+float Player::playerPosition_x()
 {
-    return body.getPosition().x;
+    float x{};
+    x = body.getPosition().x;
+    return x;
 }
+
+float Player::playerPosition_y()
+{
+    float y{};
+    y = body.getPosition().y;
+    return y;
+}
+
 
 bool Player::isFacingRight()
 {

@@ -15,7 +15,12 @@ class Refree
     public:
         Refree(float p1_health, float p2_health);
         float getP1Health();
+        void setP1Health(float p1_h);
+
+
         float getP2Health();
+
+
         bool getP1_impact();
         void setP1_impact(bool set);
 

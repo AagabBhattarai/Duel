@@ -20,6 +20,11 @@ float Refree::getP2Health()
     return p2_health;
 }
 
+void Refree::setP1Health(float p1_h)
+{
+    p1_health -= p1_h;
+}
+
 void Refree::mediate(PlayerState p1_state, PlayerState p2_state, bool p1_impact_phase, bool p2_impact_phase, bool p1_right_facing, bool p2_left_facing)
 {
     //initally no player has struck a blow

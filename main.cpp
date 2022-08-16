@@ -10,7 +10,7 @@
 #include "Timer.h"
 #include "Impact_force.h"
 #include "Initial.h"
-
+#include "Power.h"
 
 
 using namespace sf;
@@ -51,6 +51,16 @@ int main(int argc, char** argv)
                 return -1;
             }
             spark.setRepeated(true);
+
+            //POWER 
+            sf::Texture power;
+            if(!power.loadFromFile("powerup.png"))
+            {
+                std::cout<<"Error for spark image";
+                return -1;
+            }
+            spark.setRepeated(true);
+            Power powerup(&power);
             //FIghter 
 
             sf::Texture tplayer1;  //this is to import the player animation
@@ -67,7 +77,7 @@ int main(int argc, char** argv)
 
 
             sf::Texture tplayer2;
-            if (!tplayer2.loadFromFile("ken.png"))
+            if (!tplayer2.loadFromFile("kens.png"))
             {
                 std::cout << "error for texture load player";
                 return -2;
@@ -75,7 +85,7 @@ int main(int argc, char** argv)
             tplayer2.setRepeated(true);
 
             //PLayer.cpp//Player.h
-            Player player2(&tplayer2, sf::Vector2u(16, 10), 98.0f, false, &spark);
+            Player player2(&tplayer2, sf::Vector2u(16, 10), 150.0f, false, &spark);
 
             float deltaTime = 0.f; //this is the difference in time to switch between frames
             sf::Clock clock;
@@ -152,7 +162,10 @@ int main(int argc, char** argv)
             float totaltime{};
             int spark_count_p1{0};
             int spark_count_p2{0};
-            
+            sf::Vector2f p2_position;
+            float total_power_time{};
+            int power_count{0};
+
             //game loop starts now
 
             while (window.isOpen())
@@ -175,14 +188,28 @@ int main(int argc, char** argv)
                 }
 
 
-                player1.Update(deltaTime, wsize, true, Collision::checkCollision(player1.playerPosition(), player2.playerPosition()));
-                player2.Update(deltaTime, wsize, false, Collision::checkCollision(player1.playerPosition(), player2.playerPosition()));
+                player1.Update(deltaTime, wsize, true, Collision::checkCollision(player1.playerPosition_x(), player2.playerPosition_x()));
+                player2.Update(deltaTime, wsize, false, Collision::checkCollision(player1.playerPosition_x(), player2.playerPosition_x()));
 
-                
+                if(player2.player_state == POWER && player2.isTransitionPhase())
+                {
+                    
+                    // float x{},y{};
+                    p2_position.x = player2.playerPosition_x();
+                    p2_position.y = player2.playerPosition_y()-20;
+                    powerup.setPosition(p2_position);
+                }
+                if(player2.player_state == POWER && player2.isImpactPhase() &&!(Collision::checkCollisionPower(player1.playerPosition_x(), p2_position.x)))
+                {
+                    p2_position.x -= 20;
+                    powerup.setPosition(p2_position);
+                }
+
+
                 float p1_health = refree.getP1Health();
                 float p2_health = refree.getP2Health();
 
-                if  (Collision::checkCollision(player1.playerPosition(), player2.playerPosition())
+                if  (Collision::checkCollision(player1.playerPosition_x(), player2.playerPosition_x())
                     && (player1.isTransitionPhase() || player2.isTransitionPhase())
                     ) 
                     
@@ -203,7 +230,11 @@ int main(int argc, char** argv)
                 {
                     player2.player_state = refree.getNewState_p2();
                 }
-
+                if(Collision::checkCollisionPower(player1.playerPosition_x(), p2_position.x) && player2.isImpactPhase())
+                {
+                    refree.setP1Health(2);
+                    //  player1.currentHealth(refree.getP1Health() -20);  
+                }
                 //spark part
                 //this is remnants of the part to tell you that anything that must be drawn should be after window.clear
                 //also draw priortiy wise 1st background then on and on
@@ -215,6 +246,24 @@ int main(int argc, char** argv)
                 timer90sec.Draw(window);
                 player1.Draw(window);
                 player2.Draw(window);
+
+                total_power_time += deltaTime;
+                if(player2.player_state == POWER && player2.isImpactPhase())
+                {
+                    if(total_power_time >= 0.1)
+                    {
+                        power_count++;
+                        powerup.Update(power_count);
+                        total_power_time =0;
+                    }
+                    if(power_count > 4)
+                    {  
+                        power_count = 0;
+                        //  kick_sound.stop();
+                    }
+                    powerup.Draw(window);
+                }
+
 
                 //Following part checks if hit spark is to be shown or not (if there is an object to punch it shows)
                 totaltime += deltaTime;
@@ -265,6 +314,8 @@ int main(int argc, char** argv)
                         punch_sound.play();
                     
                 }
+
+               
 
                 window.display();
                 //HERE YOU CAN CALL THE CASE FOR WHEN HEALTH IS ZERO
