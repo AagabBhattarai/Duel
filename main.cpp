@@ -230,9 +230,10 @@ int main(int argc, char** argv)
                 {
                     player2.player_state = refree.getNewState_p2();
                 }
-                if(Collision::checkCollisionPower(player1.playerPosition_x(), p2_position.x))
+                if(Collision::checkCollisionPower(player1.playerPosition_x(), p2_position.x) && player2.isImpactPhase())
                 {
-                     player1.currentHealth(refree.getP1Health() -20);  
+                    refree.setP1Health(2);
+                    //  player1.currentHealth(refree.getP1Health() -20);  
                 }
                 //spark part
                 //this is remnants of the part to tell you that anything that must be drawn should be after window.clear
