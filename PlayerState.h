@@ -13,7 +13,7 @@ enum PlayerState
     REACTION,
     STAND_BLOCK,
     CROUCH_BLOCK,
-    JUMP_BLOCK
+    POWER
 };
 enum InputStatus
 {

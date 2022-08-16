@@ -29,7 +29,9 @@ public:
     void Player2_input(bool player_or_enemy, sf::Vector2u wsize, bool checkCollision);
 
     void Draw(sf::RenderWindow& window);
-    float playerPosition();
+    float playerPosition_x();
+    float playerPosition_y();
+
 
     void currentHealth(float currentHealth);
     bool isFacingRight();

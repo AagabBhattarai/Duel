@@ -45,7 +45,7 @@ const float Animation::switchTime_p2[10][16]{
         // 1    2    3    4    5     6   7    8     9   10   11   12   13  14  15  
         {0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15, 0 , 0 },//CROUCH_BLOCK-8
         // 1    2    3    4    5     6   7    8     9   10   11   12   13  14  15  
-        {0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15, 0 , 0 },//JUMP_BLOCK-9
+        {0.15,0.15,0.15,0.5,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15, 0 , 0 },//POWER-9
 
     };
 
@@ -77,7 +77,7 @@ void Animation::Update_p1(PlayerState player_state, float deltaTime, bool faceRi
 
     currentImage.y = player_state;
     totalTime += deltaTime;
-    ;
+    
     if(player_state != previous_playerState)
     {
         currentImage.x = 0;
@@ -344,8 +344,16 @@ void Animation::Update_p2(PlayerState player_state, float deltaTime, bool faceRi
                 currentImage.x = 0;
             }
         }
-        
-       
+        else if(currentImage.y == POWER)
+        {
+           if(currentImage.x >3)
+            {
+                currentImage.x = 0;
+                currentImage.y = PlayerState::IDLE;
+                input_status = isReleased;
+                reaction_done = true;
+            } 
+        }
     }
     
     float s2 = switchTime_p2[player_state][currentImage.x];
