@@ -199,7 +199,7 @@ int main(int argc, char** argv)
                     p2_position.y = player2.playerPosition_y()-20;
                     powerup.setPosition(p2_position);
                 }
-                if(player2.player_state == POWER && player2.isImpactPhase())
+                if(player2.player_state == POWER && player2.isImpactPhase() &&!(Collision::checkCollisionPower(player1.playerPosition_x(), p2_position.x)))
                 {
                     p2_position.x -= 20;
                     powerup.setPosition(p2_position);
@@ -230,7 +230,10 @@ int main(int argc, char** argv)
                 {
                     player2.player_state = refree.getNewState_p2();
                 }
-
+                if(Collision::checkCollisionPower(player1.playerPosition_x(), p2_position.x))
+                {
+                     player1.currentHealth(refree.getP1Health() -20);  
+                }
                 //spark part
                 //this is remnants of the part to tell you that anything that must be drawn should be after window.clear
                 //also draw priortiy wise 1st background then on and on
