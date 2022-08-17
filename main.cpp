@@ -188,28 +188,34 @@ int main(int argc, char** argv)
                 }
 
 
-                player1.Update(deltaTime, wsize, true, Collision::checkCollision(player1.playerPosition_x(), player2.playerPosition_x()));
-                player2.Update(deltaTime, wsize, false, Collision::checkCollision(player1.playerPosition_x(), player2.playerPosition_x()));
+                player1.Update(deltaTime, wsize, true, Collision::checkCollision(player1.playerPosition_x(), player2.playerPosition_x(), player1.playerPosition_y(), player2.playerPosition_y()));
+                player2.Update(deltaTime, wsize, false, Collision::checkCollision(player1.playerPosition_x(), player2.playerPosition_x(), player1.playerPosition_y(), player2.playerPosition_y()));
+                
 
+                //this is for starting point of the power
                 if(player2.player_state == POWER && player2.isTransitionPhase())
                 {
                     
                     // float x{},y{};
                     p2_position.x = player2.playerPosition_x();
                     p2_position.y = player2.playerPosition_y()-20;
-                    powerup.setPosition(p2_position);
+                    powerup.setPosition(p2_position, player2.isFacingRight());
                 }
-                if(player2.player_state == POWER && player2.isImpactPhase() &&!(Collision::checkCollisionPower(player1.playerPosition_x(), p2_position.x)))
-                {
-                    p2_position.x -= 20;
-                    powerup.setPosition(p2_position);
+                //this is for the position update is power
+                if(player2.player_state == POWER && player2.isImpactPhase() &&!(Collision::checkCollisionPower(player1.playerPosition_x(), p2_position.x, player1.playerPosition_y(), p2_position.y)))
+                {   
+                    if(player2.isFacingRight() == false)
+                        p2_position.x -= 20;
+                    else if (player2.isFacingRight()==true)
+                        p2_position.x += 20;
+                    powerup.setPosition(p2_position, player2.isFacingRight());
                 }
 
 
                 float p1_health = refree.getP1Health();
                 float p2_health = refree.getP2Health();
 
-                if  (Collision::checkCollision(player1.playerPosition_x(), player2.playerPosition_x())
+                if  (Collision::checkCollision(player1.playerPosition_x(), player2.playerPosition_x(), player1.playerPosition_y(), player2.playerPosition_y())
                     && (player1.isTransitionPhase() || player2.isTransitionPhase())
                     ) 
                     
@@ -230,7 +236,9 @@ int main(int argc, char** argv)
                 {
                     player2.player_state = refree.getNewState_p2();
                 }
-                if(Collision::checkCollisionPower(player1.playerPosition_x(), p2_position.x) && player2.isImpactPhase())
+
+                //Followiing part is for super move check
+                if(Collision::checkCollisionPower(player1.playerPosition_x(), p2_position.x, player1.playerPosition_y(), p2_position.y) && player2.isImpactPhase())
                 {
                     refree.setP1Health(2);
                     //  player1.currentHealth(refree.getP1Health() -20);  
