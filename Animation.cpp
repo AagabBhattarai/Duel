@@ -137,7 +137,7 @@ void Animation::Update_p1(PlayerState player_state, float deltaTime, bool faceRi
 
         else if (currentImage.y == JUMP)
         {
-            if(currentImage.x >8)
+            if(currentImage.x >7)
             {
                 currentImage.x=0;
                 currentImage.y = IDLE;
@@ -200,6 +200,7 @@ void Animation::Update_p1(PlayerState player_state, float deltaTime, bool faceRi
                 reaction_done = true;
             }
         }
+         
         else if(currentImage.y == STAND_BLOCK)
         {
             if(currentImage.x >=1)
@@ -328,7 +329,16 @@ void Animation::Update_p2(PlayerState player_state, float deltaTime, bool faceRi
         }
         else if(currentImage.y == REACTION)
         {
-            
+            if(currentImage.x >3)
+            {
+                currentImage.x = 0;
+                currentImage.y = PlayerState::IDLE;
+                input_status = isReleased;
+                reaction_done = true;
+            }
+        }
+        else if(currentImage.y == STOMACH_REACTION)
+        {
             if(currentImage.x >3)
             {
                 currentImage.x = 0;

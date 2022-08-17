@@ -25,7 +25,7 @@ void Refree::setP1Health(float p1_h)
     p1_health -= p1_h;
 }
 
-void Refree::mediate(PlayerState p1_state, PlayerState p2_state, bool p1_impact_phase, bool p2_impact_phase, bool p1_right_facing, bool p2_left_facing)
+void Refree::mediate(PlayerState p1_state, PlayerState p2_state, bool p1_impact_phase, bool p2_impact_phase, bool p1_right_facing, bool p2_left_facing, bool isCombo)
 {
     //initally no player has struck a blow
     p1_hit_p2 = false;
@@ -46,11 +46,16 @@ void Refree::mediate(PlayerState p1_state, PlayerState p2_state, bool p1_impact_
         else if(p1_state == PlayerState::KICK && (p2_state != PlayerState::STAND_BLOCK) && p1_impact_phase)
         {
             p2_health -=20;
-            new_state_p2 = PlayerState::REACTION;
             new_state_p1 = p1_state;
             p1_hit_p2 = true;
             //is p2 is getting punched that means p2 is obviouly not punching so,
             p2_hit_p1 = false;
+
+            if(isCombo)
+                new_state_p2 = PlayerState::REACTION;
+            else if(!isCombo)
+                new_state_p2 = PlayerState::STOMACH_REACTION;
+
         }
     }
     if(p2_left_facing == true)

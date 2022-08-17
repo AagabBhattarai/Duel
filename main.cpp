@@ -182,6 +182,7 @@ int main(int argc, char** argv)
                 {
                     if (event.type == sf::Event::Closed || (clockForRoundTime.getElapsedTime().asSeconds()>90))
                     {
+
                         window.close();
                     }
 
@@ -220,7 +221,7 @@ int main(int argc, char** argv)
                     ) 
                     
                 {
-                    refree.mediate(player1.player_state, player2.player_state, player1.isImpactPhase(), player2.isImpactPhase(), player1.isFacingRight(),!(player2.isFacingRight()));
+                    refree.mediate(player1.player_state, player2.player_state, player1.isImpactPhase(), player2.isImpactPhase(), player1.isFacingRight(),!(player2.isFacingRight()), player1.isCombo());
                 }
 
                 //Health update part
