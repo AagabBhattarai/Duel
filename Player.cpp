@@ -4,7 +4,7 @@
 Player::Player(sf::Texture* texture, sf::Vector2u imageCount, float speed, bool playerORenemy, sf::Texture* spark) :
     Animation(texture, imageCount),
     healthbar(sf::Vector2f(500,30),sf::Vector2f(400,30),sf::Vector2f(500,30),playerORenemy),
-    maxHeight{300.0f},
+    maxHeight{200.0f},
     floor{500.0f},
     ImpactForce(spark)
 {
@@ -85,7 +85,7 @@ void Player::Update(float deltaTime, sf::Vector2u wsize, bool player_or_enemy, b
         }
         if( floor - body.getPosition().y > 0 && gravity_starts == true)
         {
-            velocity.y = (floor - body.getPosition().y ) * 8;
+            velocity.y = (floor - body.getPosition().y ) * 5;
             // velocity.y =  +206.67f;
 
             // if(body.getPosition().y > floor || abs(body.getPosition().y - 500.0f) ==0 )/

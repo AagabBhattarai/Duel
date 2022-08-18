@@ -94,12 +94,19 @@ int main(int argc, char** argv)
 
             //For Font for Timer
             sf::Font font;
-            if (!font.loadFromFile("calibri.ttf"))
+            if (!font.loadFromFile("font.otf"))
             {
                 std::cout << "Calibri ttf";
                 return -1;
             }
-            
+            sf::Text end_text;
+            end_text.setFont(font);
+	        end_text.setFillColor(Color::Magenta);
+	        // end_text.setString("RYU WINS!!!");
+	        end_text.setCharacterSize(70);
+            end_text.setOrigin(end_text.getCharacterSize()/2, end_text.getCharacterSize()/2);
+	        end_text.setPosition(wsize.x/2-20, wsize.y/2-20);
+        
 
             //SOUND - SOUND
             sf::Music music;
@@ -146,7 +153,7 @@ int main(int argc, char** argv)
             }
             sf::Sound end_sound;
             end_sound.setBuffer(end_soundBuffer);
-            end_sound.setPlayingOffset(sf::seconds(0.5f));
+            // end_sound.setPlayingOffset(sf::seconds(0.5f));
         
 
 
@@ -165,7 +172,8 @@ int main(int argc, char** argv)
             sf::Vector2f p2_position;
             float total_power_time{};
             int power_count{0};
-
+            float end_counter{0};
+            bool match_over = false;
             //game loop starts now
 
             while (window.isOpen())
@@ -173,9 +181,7 @@ int main(int argc, char** argv)
                 timer90sec.update(static_cast<int>(clockForRoundTime.getElapsedTime().asSeconds()));
                 deltaTime = clock.restart().asSeconds();
 
-                // if(clockForRoundTime.getElapsedTime().asSeconds()  < 2)
-                //     end_sound.play();
-
+                
                 // std::cout << deltaTime<<std::endl;
                 sf::Event event;
                 while (window.pollEvent(event))
@@ -196,8 +202,6 @@ int main(int argc, char** argv)
                 //this is for starting point of the power
                 if(player2.player_state == POWER && player2.isTransitionPhase())
                 {
-                    
-                    // float x{},y{};
                     p2_position.x = player2.playerPosition_x();
                     p2_position.y = player2.playerPosition_y()-20;
                     powerup.setPosition(p2_position, player2.isFacingRight());
@@ -239,7 +243,7 @@ int main(int argc, char** argv)
                 }
 
                 //Followiing part is for super move check
-                if(Collision::checkCollisionPower(player1.playerPosition_x(), p2_position.x, player1.playerPosition_y(), p2_position.y) && player2.isImpactPhase())
+                if(Collision::checkCollisionPower(player1.playerPosition_x(), p2_position.x, player1.playerPosition_y(), p2_position.y) && player2.isImpactPhase() )
                 {
                     refree.setP1Health(2);
                     //  player1.currentHealth(refree.getP1Health() -20);  
@@ -268,6 +272,8 @@ int main(int argc, char** argv)
                     if(power_count > 4)
                     {  
                         power_count = 0;
+                        p2_position.x = 0;
+                        p2_position.y=0;
                         //  kick_sound.stop();
                     }
                     powerup.Draw(window);
@@ -324,27 +330,47 @@ int main(int argc, char** argv)
                     
                 }
 
-               
+
+                if(clockForRoundTime.getElapsedTime().asSeconds()  < 2)
+                {
+                    end_sound.play();
+                    end_text.setString("FIGHT!!!");
+                    window.draw(end_text);
+                }
+                
+                if(refree.getP1Health() <0 || refree.getP2Health() <0) 
+                {
+                    match_over = true;
+                    end_counter += deltaTime;
+                    end_sound.play();
+                }
+                
+                if(end_counter <= 5.0f && match_over)
+                {
+                    
+                    if(refree.getP1Health() < 0)
+                        end_text.setString("KEN WINS!!!");
+                    else if(refree.getP2Health() < 0)
+                    {
+                        end_text.setString("RYU WINS!!!");
+                    }
+                    window.draw(end_text);
+                    
+                }
 
                 window.display();
                 //HERE YOU CAN CALL THE CASE FOR WHEN HEALTH IS ZERO
-                if(refree.getP1Health() <0)
+                if(end_counter > 5)
                 {
                     // p2_wins
                     // this line doesn't work
                     break;
                 }
-                if(refree.getP2Health() <0)
-                {
-                    // p2_wins
-                    // this line doesn't work
-                    break;
-                }
-                
+               
                 //END SCRREN PART PART ENDS
                 // ADD CONDTION IF END SCREEN PART IF TRUE THEN WHAT TO DO
             }
-            end_sound.play(); 
+            // end_sound.play(); 
     
 
 
