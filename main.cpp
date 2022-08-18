@@ -101,7 +101,7 @@ int main(int argc, char** argv)
             }
             sf::Text end_text;
             end_text.setFont(font);
-	        end_text.setFillColor(Color::Magenta);
+	        end_text.setFillColor(sf::Color(255,129,0));
 	        // end_text.setString("RYU WINS!!!");
 	        end_text.setCharacterSize(70);
             end_text.setOrigin(end_text.getCharacterSize()/2, end_text.getCharacterSize()/2);
@@ -112,12 +112,22 @@ int main(int argc, char** argv)
             sf::Music music;
             if(!music.openFromFile("music.wav"));
             {
-                std::cout<<"error for background_music.wav opening";
+                std::cout<<"background_music.wav opening";
                 // return -2;s// program should terminate but terminates even though open for file is successful
             }
             music.setVolume(10.0f);
             music.setLoop(true);
             music.play();
+
+
+            sf::SoundBuffer fire_soundBuffer;
+            if(!fire_soundBuffer.loadFromFile("fire.wav"))
+            {
+                std::cout << "air audio file problem";
+                return -2;
+            }
+            sf::Sound power_sound;
+            power_sound.setBuffer(fire_soundBuffer);
 
 
             //KICK SOUND
@@ -130,6 +140,15 @@ int main(int argc, char** argv)
             sf::Sound kick_sound;
             kick_sound.setBuffer(kick_soundBuffer);
             // kick_sound.setLoop(true);
+
+            sf::SoundBuffer grunt_soundBuffer;
+            if(!grunt_soundBuffer.loadFromFile("grunt.wav"))
+            {
+                std::cout << "grunt audio file problem";
+                return -2;
+            }
+            sf::Sound grunt_sound;
+            grunt_sound.setBuffer(grunt_soundBuffer);
 
 
             //PUNCH SOUND
@@ -153,7 +172,17 @@ int main(int argc, char** argv)
             }
             sf::Sound end_sound;
             end_sound.setBuffer(end_soundBuffer);
-            // end_sound.setPlayingOffset(sf::seconds(0.5f));
+
+
+            sf::SoundBuffer win_soundBuffer;
+            if(!win_soundBuffer.loadFromFile("Win.wav"))
+            {
+                std::cout << "win.wav audio file problem";
+                return -2;
+            }
+            sf::Sound win_sound;
+            win_sound.setBuffer(win_soundBuffer);
+            // win_sound.setPlayingOffset(sf::seconds(3.f));
         
 
 
@@ -194,10 +223,11 @@ int main(int argc, char** argv)
 
                 }
 
-
-                player1.Update(deltaTime, wsize, true, Collision::checkCollision(player1.playerPosition_x(), player2.playerPosition_x(), player1.playerPosition_y(), player2.playerPosition_y()));
-                player2.Update(deltaTime, wsize, false, Collision::checkCollision(player1.playerPosition_x(), player2.playerPosition_x(), player1.playerPosition_y(), player2.playerPosition_y()));
-                
+                if(!match_over)
+                {
+                    player1.Update(deltaTime, wsize, true, Collision::checkCollision(player1.playerPosition_x(), player2.playerPosition_x(), player1.playerPosition_y(), player2.playerPosition_y()));
+                    player2.Update(deltaTime, wsize, false, Collision::checkCollision(player1.playerPosition_x(), player2.playerPosition_x(), player1.playerPosition_y(), player2.playerPosition_y()));
+                }
 
                 //this is for starting point of the power
                 if(player2.player_state == POWER && player2.isTransitionPhase())
@@ -205,6 +235,7 @@ int main(int argc, char** argv)
                     p2_position.x = player2.playerPosition_x();
                     p2_position.y = player2.playerPosition_y()-20;
                     powerup.setPosition(p2_position, player2.isFacingRight());
+                    power_sound.play();
                 }
                 //this is for the position update is power
                 if(player2.player_state == POWER && player2.isImpactPhase() &&!(Collision::checkCollisionPower(player1.playerPosition_x(), p2_position.x, player1.playerPosition_y(), p2_position.y)))
@@ -237,22 +268,30 @@ int main(int argc, char** argv)
                 {
                     player1.player_state = refree.getNewState_p1();
                 }
+               
                 if(p2_health > refree.getP2Health())
                 {
+
                     player2.player_state = refree.getNewState_p2();
                 }
 
-                //Followiing part is for super move check
+                if(player1.isTransitionPhase() && (player1.player_state == PlayerState::PUNCH || player1.player_state == PlayerState::KICK))
+                {
+                    grunt_sound.play();
+                }
+
+                if(player2.isTransitionPhase() && (player2.player_state == PlayerState::PUNCH || player2.player_state == PlayerState::KICK || player2.player_state == PlayerState::POWER))
+                {
+                    grunt_sound.play();
+                }
+                //Following part is for super move check
                 if(Collision::checkCollisionPower(player1.playerPosition_x(), p2_position.x, player1.playerPosition_y(), p2_position.y) && player2.isImpactPhase() )
                 {
                     refree.setP1Health(2);
-                    //  player1.currentHealth(refree.getP1Health() -20);  
+                    if(player1.player_state != JUMP)
+                        player1.player_state = PlayerState::REACTION;
                 }
-                //spark part
-                //this is remnants of the part to tell you that anything that must be drawn should be after window.clear
-                //also draw priortiy wise 1st background then on and on
                 
-
                 
                 window.clear();
                 window.draw(gridsprite);
@@ -334,23 +373,29 @@ int main(int argc, char** argv)
                 if(clockForRoundTime.getElapsedTime().asSeconds()  < 2)
                 {
                     end_sound.play();
+                    win_sound.play();
+                    
+                    end_text.setScale(2,2);
+                    end_text.setPosition(wsize.x/2-90,wsize.y/2-100);
                     end_text.setString("FIGHT!!!");
                     window.draw(end_text);
                 }
                 
-                if(refree.getP1Health() <0 || refree.getP2Health() <0) 
+                if(refree.getP1Health() <0 || refree.getP2Health() <0 || clockForRoundTime.getElapsedTime().asSeconds() > 90) 
                 {
+                    win_sound.play();
                     match_over = true;
                     end_counter += deltaTime;
-                    end_sound.play();
                 }
                 
                 if(end_counter <= 5.0f && match_over)
                 {
-                    
-                    if(refree.getP1Health() < 0)
+                    win_sound.play();
+                    if(refree.getP1Health() < 0 || refree.getP1Health() < refree.getP2Health())
+                    {
                         end_text.setString("KEN WINS!!!");
-                    else if(refree.getP2Health() < 0)
+                    }
+                    else if(refree.getP2Health() < 0  || refree.getP2Health() < refree.getP1Health())
                     {
                         end_text.setString("RYU WINS!!!");
                     }
@@ -370,7 +415,6 @@ int main(int argc, char** argv)
                 //END SCRREN PART PART ENDS
                 // ADD CONDTION IF END SCREEN PART IF TRUE THEN WHAT TO DO
             }
-            // end_sound.play(); 
     
 
 
