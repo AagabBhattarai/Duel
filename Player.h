@@ -35,6 +35,7 @@ public:
 
     void currentHealth(float currentHealth);
     bool isFacingRight();
+    bool isCombo();
 
 public:
     PlayerState player_state;

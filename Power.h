@@ -10,5 +10,5 @@ class Power
         Power(sf::Texture* texture);
         void Draw(sf::RenderWindow& window);
         void Update(int left);
-        void setPosition(sf::Vector2f power_position);
+        void setPosition(sf::Vector2f power_position, bool left_or_right);
 };

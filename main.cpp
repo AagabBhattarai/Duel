@@ -94,23 +94,40 @@ int main(int argc, char** argv)
 
             //For Font for Timer
             sf::Font font;
-            if (!font.loadFromFile("calibri.ttf"))
+            if (!font.loadFromFile("font.otf"))
             {
                 std::cout << "Calibri ttf";
                 return -1;
             }
-            
+            sf::Text end_text;
+            end_text.setFont(font);
+	        end_text.setFillColor(sf::Color(255,129,0));
+	        // end_text.setString("RYU WINS!!!");
+	        end_text.setCharacterSize(70);
+            end_text.setOrigin(end_text.getCharacterSize()/2, end_text.getCharacterSize()/2);
+	        end_text.setPosition(wsize.x/2-20, wsize.y/2-20);
+        
 
             //SOUND - SOUND
             sf::Music music;
             if(!music.openFromFile("music.wav"));
             {
-                std::cout<<"error for background_music.wav opening";
+                std::cout<<"background_music.wav opening";
                 // return -2;s// program should terminate but terminates even though open for file is successful
             }
             music.setVolume(10.0f);
             music.setLoop(true);
             music.play();
+
+
+            sf::SoundBuffer fire_soundBuffer;
+            if(!fire_soundBuffer.loadFromFile("fire.wav"))
+            {
+                std::cout << "air audio file problem";
+                return -2;
+            }
+            sf::Sound power_sound;
+            power_sound.setBuffer(fire_soundBuffer);
 
 
             //KICK SOUND
@@ -123,6 +140,15 @@ int main(int argc, char** argv)
             sf::Sound kick_sound;
             kick_sound.setBuffer(kick_soundBuffer);
             // kick_sound.setLoop(true);
+
+            sf::SoundBuffer grunt_soundBuffer;
+            if(!grunt_soundBuffer.loadFromFile("grunt.wav"))
+            {
+                std::cout << "grunt audio file problem";
+                return -2;
+            }
+            sf::Sound grunt_sound;
+            grunt_sound.setBuffer(grunt_soundBuffer);
 
 
             //PUNCH SOUND
@@ -146,7 +172,17 @@ int main(int argc, char** argv)
             }
             sf::Sound end_sound;
             end_sound.setBuffer(end_soundBuffer);
-            end_sound.setPlayingOffset(sf::seconds(0.5f));
+
+
+            sf::SoundBuffer win_soundBuffer;
+            if(!win_soundBuffer.loadFromFile("Win.wav"))
+            {
+                std::cout << "win.wav audio file problem";
+                return -2;
+            }
+            sf::Sound win_sound;
+            win_sound.setBuffer(win_soundBuffer);
+            // win_sound.setPlayingOffset(sf::seconds(3.f));
         
 
 
@@ -165,7 +201,8 @@ int main(int argc, char** argv)
             sf::Vector2f p2_position;
             float total_power_time{};
             int power_count{0};
-
+            float end_counter{0};
+            bool match_over = false;
             //game loop starts now
 
             while (window.isOpen())
@@ -173,48 +210,53 @@ int main(int argc, char** argv)
                 timer90sec.update(static_cast<int>(clockForRoundTime.getElapsedTime().asSeconds()));
                 deltaTime = clock.restart().asSeconds();
 
-                // if(clockForRoundTime.getElapsedTime().asSeconds()  < 2)
-                //     end_sound.play();
-
+                
                 // std::cout << deltaTime<<std::endl;
                 sf::Event event;
                 while (window.pollEvent(event))
                 {
                     if (event.type == sf::Event::Closed || (clockForRoundTime.getElapsedTime().asSeconds()>90))
                     {
+
                         window.close();
                     }
 
                 }
 
+                if(!match_over)
+                {
+                    player1.Update(deltaTime, wsize, true, Collision::checkCollision(player1.playerPosition_x(), player2.playerPosition_x(), player1.playerPosition_y(), player2.playerPosition_y()));
+                    player2.Update(deltaTime, wsize, false, Collision::checkCollision(player1.playerPosition_x(), player2.playerPosition_x(), player1.playerPosition_y(), player2.playerPosition_y()));
+                }
 
-                player1.Update(deltaTime, wsize, true, Collision::checkCollision(player1.playerPosition_x(), player2.playerPosition_x()));
-                player2.Update(deltaTime, wsize, false, Collision::checkCollision(player1.playerPosition_x(), player2.playerPosition_x()));
-
+                //this is for starting point of the power
                 if(player2.player_state == POWER && player2.isTransitionPhase())
                 {
-                    
-                    // float x{},y{};
                     p2_position.x = player2.playerPosition_x();
                     p2_position.y = player2.playerPosition_y()-20;
-                    powerup.setPosition(p2_position);
+                    powerup.setPosition(p2_position, player2.isFacingRight());
+                    power_sound.play();
                 }
-                if(player2.player_state == POWER && player2.isImpactPhase() &&!(Collision::checkCollisionPower(player1.playerPosition_x(), p2_position.x)))
-                {
-                    p2_position.x -= 20;
-                    powerup.setPosition(p2_position);
+                //this is for the position update is power
+                if(player2.player_state == POWER && player2.isImpactPhase() &&!(Collision::checkCollisionPower(player1.playerPosition_x(), p2_position.x, player1.playerPosition_y(), p2_position.y)))
+                {   
+                    if(player2.isFacingRight() == false)
+                        p2_position.x -= 20;
+                    else if (player2.isFacingRight()==true)
+                        p2_position.x += 20;
+                    powerup.setPosition(p2_position, player2.isFacingRight());
                 }
 
 
                 float p1_health = refree.getP1Health();
                 float p2_health = refree.getP2Health();
 
-                if  (Collision::checkCollision(player1.playerPosition_x(), player2.playerPosition_x())
+                if  (Collision::checkCollision(player1.playerPosition_x(), player2.playerPosition_x(), player1.playerPosition_y(), player2.playerPosition_y())
                     && (player1.isTransitionPhase() || player2.isTransitionPhase())
                     ) 
                     
                 {
-                    refree.mediate(player1.player_state, player2.player_state, player1.isImpactPhase(), player2.isImpactPhase(), player1.isFacingRight(),!(player2.isFacingRight()));
+                    refree.mediate(player1.player_state, player2.player_state, player1.isImpactPhase(), player2.isImpactPhase(), player1.isFacingRight(),!(player2.isFacingRight()), player1.isCombo());
                 }
 
                 //Health update part
@@ -226,20 +268,30 @@ int main(int argc, char** argv)
                 {
                     player1.player_state = refree.getNewState_p1();
                 }
+               
                 if(p2_health > refree.getP2Health())
                 {
+
                     player2.player_state = refree.getNewState_p2();
                 }
-                if(Collision::checkCollisionPower(player1.playerPosition_x(), p2_position.x) && player2.isImpactPhase())
+
+                if(player1.isTransitionPhase() && (player1.player_state == PlayerState::PUNCH || player1.player_state == PlayerState::KICK))
+                {
+                    grunt_sound.play();
+                }
+
+                if(player2.isTransitionPhase() && (player2.player_state == PlayerState::PUNCH || player2.player_state == PlayerState::KICK || player2.player_state == PlayerState::POWER))
+                {
+                    grunt_sound.play();
+                }
+                //Following part is for super move check
+                if(Collision::checkCollisionPower(player1.playerPosition_x(), p2_position.x, player1.playerPosition_y(), p2_position.y) && player2.isImpactPhase() )
                 {
                     refree.setP1Health(2);
-                    //  player1.currentHealth(refree.getP1Health() -20);  
+                    if(player1.player_state != JUMP)
+                        player1.player_state = PlayerState::REACTION;
                 }
-                //spark part
-                //this is remnants of the part to tell you that anything that must be drawn should be after window.clear
-                //also draw priortiy wise 1st background then on and on
                 
-
                 
                 window.clear();
                 window.draw(gridsprite);
@@ -259,6 +311,8 @@ int main(int argc, char** argv)
                     if(power_count > 4)
                     {  
                         power_count = 0;
+                        p2_position.x = 0;
+                        p2_position.y=0;
                         //  kick_sound.stop();
                     }
                     powerup.Draw(window);
@@ -315,27 +369,52 @@ int main(int argc, char** argv)
                     
                 }
 
-               
+
+                if(clockForRoundTime.getElapsedTime().asSeconds()  < 2)
+                {
+                    end_sound.play();
+                    win_sound.play();
+                    
+                    end_text.setScale(2,2);
+                    end_text.setPosition(wsize.x/2-90,wsize.y/2-100);
+                    end_text.setString("FIGHT!!!");
+                    window.draw(end_text);
+                }
+                
+                if(refree.getP1Health() <0 || refree.getP2Health() <0 || clockForRoundTime.getElapsedTime().asSeconds() > 90) 
+                {
+                    win_sound.play();
+                    match_over = true;
+                    end_counter += deltaTime;
+                }
+                
+                if(end_counter <= 5.0f && match_over)
+                {
+                    win_sound.play();
+                    if(refree.getP1Health() < 0 || refree.getP1Health() < refree.getP2Health())
+                    {
+                        end_text.setString("KEN WINS!!!");
+                    }
+                    else if(refree.getP2Health() < 0  || refree.getP2Health() < refree.getP1Health())
+                    {
+                        end_text.setString("RYU WINS!!!");
+                    }
+                    window.draw(end_text);
+                    
+                }
 
                 window.display();
                 //HERE YOU CAN CALL THE CASE FOR WHEN HEALTH IS ZERO
-                if(refree.getP1Health() <0)
+                if(end_counter > 5)
                 {
                     // p2_wins
                     // this line doesn't work
                     break;
                 }
-                if(refree.getP2Health() <0)
-                {
-                    // p2_wins
-                    // this line doesn't work
-                    break;
-                }
-                
+               
                 //END SCRREN PART PART ENDS
                 // ADD CONDTION IF END SCREEN PART IF TRUE THEN WHAT TO DO
             }
-            end_sound.play(); 
     
 
 

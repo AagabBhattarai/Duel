@@ -12,7 +12,7 @@ enum PlayerState
     KICK,
     REACTION,
     STAND_BLOCK,
-    CROUCH_BLOCK,
+    STOMACH_REACTION,
     POWER
 };
 enum InputStatus

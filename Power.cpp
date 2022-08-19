@@ -15,9 +15,13 @@ Power::Power(sf::Texture* texture)
     power_spark.setScale(-2,2);
     power_spark.setOrigin(power_spark.getSize().x / 2, power_spark.getSize().y / 2);
 }
-void Power::setPosition(sf::Vector2f power_position)
+void Power::setPosition(sf::Vector2f power_position, bool left_or_right)
 {
     power_spark.setPosition(power_position.x, power_position.y);
+    if(left_or_right == true) //when true power is right facing
+        power_spark.setScale(2.5,2.5);
+    else
+        power_spark.setScale(-2.5,2.5);
 }
 void Power::Update(int left)
 {   

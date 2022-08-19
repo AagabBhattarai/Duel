@@ -4,7 +4,7 @@
 Player::Player(sf::Texture* texture, sf::Vector2u imageCount, float speed, bool playerORenemy, sf::Texture* spark) :
     Animation(texture, imageCount),
     healthbar(sf::Vector2f(500,30),sf::Vector2f(400,30),sf::Vector2f(500,30),playerORenemy),
-    maxHeight{376.0f},
+    maxHeight{200.0f},
     floor{500.0f},
     ImpactForce(spark)
 {
@@ -45,7 +45,7 @@ void Player::Update(float deltaTime, sf::Vector2u wsize, bool player_or_enemy, b
             //for player2
         else if (!player_or_enemy)
         {
-            if(player_state == REACTION)
+            if(player_state == REACTION || player_state == STOMACH_REACTION)
                 Animation::input_status = InputStatus::isPressed;
         }
     }
@@ -74,27 +74,32 @@ void Player::Update(float deltaTime, sf::Vector2u wsize, bool player_or_enemy, b
     {
         if( (body.getPosition().y) - maxHeight > 0 && !gravity_starts)
         {
-            velocity.y =  (maxHeight -body.getPosition().y) * 6;
-            // velocity.y =  -61;
+            velocity.y =  (maxHeight -body.getPosition().y) ;
+            // velocity.y =  -206.67f;
 
             if(body.getPosition().y < 377)
             {
                 gravity_starts = true;
-                body.setPosition(body.getPosition().x,376.0f);
+                // body.setPosition(body.getPosition().x,376.0f);
             }
         }
         if( floor - body.getPosition().y > 0 && gravity_starts == true)
         {
-            velocity.y = 100/((floor - body.getPosition().y ) * 0.007);
-            // velocity.y =  +61;
+            velocity.y = (floor - body.getPosition().y ) *4 ;
+            // velocity.y =  +206.67f;
 
-            if(body.getPosition().y > floor || abs(body.getPosition().y - 500.0f) <5 )
+            // if(body.getPosition().y > floor || abs(body.getPosition().y - 500.0f) ==0 )/
+            if(body.getPosition().y > 500)
             {
                 body.setPosition(body.getPosition().x,500.0f);
-                player_state= IDLE;
+                // player_state= IDLE;
                 gravity_starts = false;
             }
         }
+    }
+    if(input_status == InputStatus::isReleased)
+    {
+        gravity_starts = false;
     }
    
     // std::cout<<body.getPosition().y<<std::endl;
@@ -482,4 +487,7 @@ bool Player::isFacingRight()
 {
     return faceRight;
 }
-
+bool Player::isCombo()
+{
+    return Animation::combo_move;
+}

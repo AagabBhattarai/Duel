@@ -13,7 +13,7 @@ const float Animation::switchTime_p1[10][16]{
         // 1    2    3    4    5     6   7    8     9   10   11   12   13  14  15        
         {0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15, 0 , 0 },//CROUCH-4
         // 1    2     3       4       5      6         7    8      9      10     11     12     13   14   15  
-        {0.1  ,0.1,  0.4 ,  0.15 ,  0.15  ,  0.1 ,  0.40 , 0.15 ,  0.1  , 0.1 , 0.15, 0.15, 0.15,  0 , 0 },//KICK-5
+        {0.1  ,0.1,  0.4 ,  0.15 ,  0.15  ,  0.1 ,  0.40 , 0.15 ,  0.1  , 0.1 , 0.11, 0.11, 0.1,  0 , 0 },//KICK-5
         // 1    2   3    4    5     6   7    8     9   10   11   12   13  14  15  
         {0.15,0.2,0.3,0.15,0.15,0.15,0.15,0.1,0.15,0.15,0.15,0.15,0.15, 0 , 0 },//REACTION-6
         // 1    2    3    4    5     6   7    8     9   10   11   12   13  14  15  
@@ -137,7 +137,7 @@ void Animation::Update_p1(PlayerState player_state, float deltaTime, bool faceRi
 
         else if (currentImage.y == JUMP)
         {
-            if(currentImage.x >8)
+            if(currentImage.x >7)
             {
                 currentImage.x=0;
                 currentImage.y = IDLE;
@@ -200,6 +200,7 @@ void Animation::Update_p1(PlayerState player_state, float deltaTime, bool faceRi
                 reaction_done = true;
             }
         }
+         
         else if(currentImage.y == STAND_BLOCK)
         {
             if(currentImage.x >=1)
@@ -328,7 +329,16 @@ void Animation::Update_p2(PlayerState player_state, float deltaTime, bool faceRi
         }
         else if(currentImage.y == REACTION)
         {
-            
+            if(currentImage.x >3)
+            {
+                currentImage.x = 0;
+                currentImage.y = PlayerState::IDLE;
+                input_status = isReleased;
+                reaction_done = true;
+            }
+        }
+        else if(currentImage.y == STOMACH_REACTION)
+        {
             if(currentImage.x >3)
             {
                 currentImage.x = 0;
