@@ -3,7 +3,7 @@
 
 Player::Player(sf::Texture* texture, sf::Vector2u imageCount, float speed, bool playerORenemy, sf::Texture* spark) :
     Animation(texture, imageCount),
-    healthbar(sf::Vector2f(500,30),sf::Vector2f(400,30),sf::Vector2f(500,30),playerORenemy),
+    HealthBar(sf::Vector2f(500,30),sf::Vector2f(400,30),sf::Vector2f(500,30),playerORenemy),
     maxHeight{200.0f},
     floor{500.0f},
     ImpactForce(spark)
@@ -128,7 +128,7 @@ void Player::Update(float deltaTime, sf::Vector2u wsize, bool player_or_enemy, b
 
 void Player::currentHealth(float currentHealth)
 {
-    healthbar.healthUpdate(currentHealth);
+    HealthBar::healthUpdate(currentHealth);
 }
 
 void Player::Player1_input(bool player_or_enemy, sf::Vector2u wsize, bool checkCollision)
@@ -460,9 +460,8 @@ void Player::Player2_input(bool player_or_enemy, sf::Vector2u wsize, bool checkC
 
 void Player::Draw(sf::RenderWindow& window)
 {
-    healthbar.Draw(window);
+    HealthBar::Draw(window);
     window.draw(body);
-    // ImpactForce::Draw(window);
 }
 
 
