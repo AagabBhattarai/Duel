@@ -1,5 +1,6 @@
 
 #include "Initial.h"
+#include "SFML/Audio.hpp"
 #include "exitpage.h"
 
 using namespace sf;
@@ -15,8 +16,20 @@ int Initial::showMainMenu()//main page
 	RectangleShape background;
 	background.setSize(Vector2f(1366, 704));
 	Texture Maintexture;
-	Maintexture.loadFromFile("background_for_mainmenu.png");
+	Maintexture.loadFromFile("fall.gif");
 	background.setTexture(&Maintexture);
+
+	//SOUND
+	sf::Music music;
+	if (!music.openFromFile("menuMusic.ogg"))
+	{
+		std::cout << "ERROR" << std::endl;
+	}
+
+	music.setVolume(50);         // reduce the volume
+	music.setLoop(true);         // make it loop
+	music.play();
+	
 
 	//photo to the game
 
@@ -131,8 +144,19 @@ int Initial::showExitPage()
 	RectangleShape background;
 	background.setSize(Vector2f(1366, 704));
 	Texture Maintexture;
-	Maintexture.loadFromFile("grid.jpg");
+	Maintexture.loadFromFile("fall.gif");
 	background.setTexture(&Maintexture);
+
+	//SOUND
+	sf::Music music;
+	if (!music.openFromFile("sadMeme.wav"))
+	{
+		std::cout << "ERROR" << std::endl;
+	}
+
+	music.setVolume(50);         // reduce the volume
+	music.setLoop(true);         // make it loop
+	music.play();
 
 	//photo to the game
 
