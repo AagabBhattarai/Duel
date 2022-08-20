@@ -10,6 +10,7 @@
 #include "Impact_force.h"
 #include "Initial.h"
 #include "Power.h"
+#include <fstream>
 
 
 
@@ -197,8 +198,27 @@ int main(int argc, char** argv)
             int power_count{0};
             float end_counter{0};
             bool match_over = false;
-            //game loop starts now
 
+            fstream match_record_read("match_history.dat", std::ios::in | std::ios::binary);
+            if(!match_record_read)
+            {
+                std::cout<<"error accessing record file";
+            }
+            int total_matches{};
+            int ken_wins{};
+            int ryu_wins{};
+            bool ken_won = false;
+            bool ryu_won = false;
+
+            if(match_record_read)
+            {
+                match_record_read.read(reinterpret_cast<char*>(&total_matches),sizeof(total_matches));
+                match_record_read.read(reinterpret_cast<char*>(&ken_wins),sizeof(ken_wins));
+                match_record_read.read(reinterpret_cast<char*>(&ryu_wins),sizeof(ryu_wins));
+            }
+            std::cout<<std::endl<<total_matches<<std::endl<<ken_wins;
+            //game loop starts now
+            total_matches++;
             while (window.isOpen())
             {
                 timer90sec.update(static_cast<int>(clockForRoundTime.getElapsedTime().asSeconds()));
@@ -387,10 +407,14 @@ int main(int argc, char** argv)
                     win_sound.play();
                     if(refree.getP1Health() < 0 || refree.getP1Health() < refree.getP2Health())
                     {
+                        ken_won = true;
+                        end_text.setPosition(wsize.x/2-500, wsize.y/2);
                         end_text.setString("KEN WINS!!!");
                     }
                     else if(refree.getP2Health() < 0  || refree.getP2Health() < refree.getP1Health())
                     {
+                        ryu_won = true;
+                        end_text.setPosition(wsize.x/2-100, wsize.y/2);
                         end_text.setString("RYU WINS!!!");
                     }
                     window.draw(end_text);
@@ -404,8 +428,17 @@ int main(int argc, char** argv)
                 }
                
             }
-    
-
+            match_record_read.close();
+            
+            if(ken_won)
+                ken_wins++;
+            else if(ryu_won)
+                ryu_wins++;
+            fstream match_record_write("match_history.dat", std::ios::out | std::ios::binary);
+            match_record_write.write(reinterpret_cast<char*>(&total_matches), sizeof(int));
+            match_record_write.write(reinterpret_cast<char*>(&ken_wins), sizeof(int));
+            match_record_write.write(reinterpret_cast<char*>(&ryu_wins), sizeof(int));
+            match_record_write.close();
 
         }
 
