@@ -7,11 +7,11 @@
 #include "Impact_force.h"
 
 
-class Player: public Animation, public ImpactForce
+class Player: public Animation, public ImpactForce, public HealthBar
 {
 private:
     sf::RectangleShape body;
-    HealthBar healthbar;
+    // HealthBar healthbar;
     float speed;
     sf::Vector2f velocity;
     bool faceRight;

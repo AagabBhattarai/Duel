@@ -34,7 +34,7 @@ void Refree::mediate(PlayerState p1_state, PlayerState p2_state, bool p1_impact_
     //check if any of the player has been struck    
     if(p1_right_facing == true) // this means this player1
     {
-        if(p1_state == PlayerState::PUNCH && (p2_state != PlayerState::STAND_BLOCK) && p1_impact_phase)
+        if(p1_state == PlayerState::PUNCH && (p2_state != PlayerState::STAND_BLOCK && p2_state != PlayerState::CROUCH) && p1_impact_phase)
         {
             p2_health -=20;
             if(p2_state != JUMP)
@@ -46,7 +46,7 @@ void Refree::mediate(PlayerState p1_state, PlayerState p2_state, bool p1_impact_
             //is p2 is getting punched that means p2 is obviouly not punching so,
             p2_hit_p1 = false;
         }
-        else if(p1_state == PlayerState::KICK && (p2_state != PlayerState::STAND_BLOCK) && p1_impact_phase)
+        else if(p1_state == PlayerState::KICK && (p2_state != PlayerState::STAND_BLOCK && p2_state != PlayerState::JUMP) && p1_impact_phase)
         {
             p2_health -=20;
             new_state_p1 = p1_state;
@@ -64,7 +64,7 @@ void Refree::mediate(PlayerState p1_state, PlayerState p2_state, bool p1_impact_
     }
     if(p2_left_facing == true)
     {
-        if(p2_state == PlayerState::PUNCH && (p1_state != PlayerState::STAND_BLOCK) && p2_impact_phase)
+        if(p2_state == PlayerState::PUNCH && (p1_state != PlayerState::STAND_BLOCK && p1_state != PlayerState::CROUCH) && p2_impact_phase)
         {
             p1_health -=20;
             if(p1_state != JUMP)
