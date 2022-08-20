@@ -94,8 +94,6 @@ void Player::Update(float deltaTime, sf::Vector2u wsize, bool player_or_enemy, b
     {
         gravity_starts = false;
     }
-    if(player_or_enemy)
-    std::cout<<body.getPosition().y<<std::endl;
 
     if (velocity.x > 0.0f)
         faceRight = true;

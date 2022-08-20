@@ -1,6 +1,8 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include "MainMenu.h"
+#include <fstream>
+#include <string>
 
 class Initial
 {

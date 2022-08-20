@@ -23,9 +23,11 @@ MainMenu::MainMenu(float width, float height)
 	//about
 	mainMenu[2].setFont(font);
 	mainMenu[2].setFillColor(Color::White);
-	mainMenu[2].setString("About");
-	mainMenu[2].setCharacterSize(125);
-	mainMenu[2].setPosition(925, 300);
+
+	mainMenu[2].setString("History");
+	mainMenu[2].setCharacterSize(70);
+	mainMenu[2].setPosition(400, 400);
+
 	//exit
 	mainMenu[3].setFont(font);
 	mainMenu[3].setFillColor(Color::White);
