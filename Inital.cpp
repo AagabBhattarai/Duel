@@ -56,7 +56,7 @@ int Initial::showMainMenu()//main page
 					}
 					sf::Text total_match;
 					total_match.setFont(font);
-					total_match.setFillColor(sf::Color(255,129,0));
+					total_match.setFillColor(sf::Color::White);
 					total_match.setCharacterSize(70);
 					// total_match.setOrigin(total_match.getCharacterSize()/2, total_match.getCharacterSize()/2);
 					total_match.setPosition(0,0);
@@ -64,14 +64,14 @@ int Initial::showMainMenu()//main page
 
 					sf::Text ken_match;
 					ken_match.setFont(font);
-					ken_match.setFillColor(sf::Color(255,129,0));
+					ken_match.setFillColor(sf::Color::White);
 					ken_match.setCharacterSize(70);
 					// ken_match.setOrigin(ken_match.getCharacterSize()/2, to_match.getCharacterSize()/2);
 					ken_match.setPosition(0,200);
 
 					sf::Text ryu_match;
 					ryu_match.setFont(font);
-					ryu_match.setFillColor(sf::Color(255,129,0));
+					ryu_match.setFillColor(sf::Color::White);
 					ryu_match.setCharacterSize(70);
 					// ryu_match.setOrigin(ken_match.getCharacterSize()/2, total_match.getCharacterSize()/2);
 					ryu_match.setPosition(0,400);
@@ -108,7 +108,14 @@ int Initial::showMainMenu()//main page
 					}
 
 					std::string str = std::to_string(total_matches);
-    				total_match.setString("Total Matches PLayer:"+ str);
+    				total_match.setString("Total Matches Played:"+ str);
+
+					std::string str1 = std::to_string(ken_wins);
+    				ken_match.setString("KEN'S WINS:"+ str1);
+
+					std::string str2 = std::to_string(ryu_wins);
+    				ryu_match.setString("RYU'S WINS:"+ str2);
+
 					int x = mainMenu.MainMenuPressed();
 					if (x == 0)
 					{
@@ -165,6 +172,9 @@ int Initial::showMainMenu()//main page
 							ABOUT.clear();
 							ABOUT.draw(gridsprite);
 							ABOUT.draw(total_match);
+							ABOUT.draw(ken_match);
+							ABOUT.draw(ryu_match);
+
 							ABOUT.display();
 						}
 					}
