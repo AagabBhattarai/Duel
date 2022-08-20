@@ -99,7 +99,7 @@ int main(int argc, char** argv)
             end_text.setFont(font);
 	        end_text.setFillColor(sf::Color(255,129,0));
 	        end_text.setCharacterSize(70);
-            end_text.setOrigin(end_text.getCharacterSize()/2, end_text.getCharacterSize()/2);
+            // end_text.setOrigin(end_text.getCharacterSize()/2, end_text.getCharacterSize()/2);
 	        end_text.setPosition(wsize.x/2-20, wsize.y/2-20);
         
 
@@ -302,7 +302,7 @@ int main(int argc, char** argv)
                 if(Collision::checkCollisionPower(player1.playerPosition_x(), p2_position.x, player1.playerPosition_y(), p2_position.y) && player2.isImpactPhase() )
                 {
                     refree.setP1Health(2);
-                    if(player1.player_state != JUMP)
+                    if(player1.player_state != JUMP && player1.isFacingRight())
                         player1.player_state = PlayerState::REACTION;
                 }
                 
@@ -327,7 +327,6 @@ int main(int argc, char** argv)
                         power_count = 0;
                         p2_position.x = 0;
                         p2_position.y=0;
-                        //  kick_sound.stop();
                     }
                     powerup.Draw(window);
                 }
@@ -390,7 +389,7 @@ int main(int argc, char** argv)
                     // win_sound.play();
                     
                     end_text.setScale(2,2);
-                    end_text.setPosition(wsize.x/2-90,wsize.y/2-100);
+                    end_text.setPosition(wsize.x/2-220,wsize.y/2-200);
                     end_text.setString("FIGHT!!!");
                     window.draw(end_text);
                 }
@@ -408,13 +407,13 @@ int main(int argc, char** argv)
                     if(refree.getP1Health() < 0 || refree.getP1Health() < refree.getP2Health())
                     {
                         ken_won = true;
-                        end_text.setPosition(wsize.x/2-500, wsize.y/2);
+                        end_text.setPosition(wsize.x/2-320, wsize.y/2-200);
                         end_text.setString("KEN WINS!!!");
                     }
                     else if(refree.getP2Health() < 0  || refree.getP2Health() < refree.getP1Health())
                     {
                         ryu_won = true;
-                        end_text.setPosition(wsize.x/2-100, wsize.y/2);
+                        end_text.setPosition(wsize.x/2-320, wsize.y/2-200);
                         end_text.setString("RYU WINS!!!");
                     }
                     window.draw(end_text);
