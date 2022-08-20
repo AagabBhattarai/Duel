@@ -13,7 +13,7 @@ const float Animation::switchTime_p1[10][16]{
         // 1    2    3    4    5     6   7    8     9   10   11   12   13  14  15        
         {0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15, 0 , 0 },//CROUCH-4
         // 1    2     3       4       5      6         7    8      9      10     11     12     13   14   15  
-        {0.1  ,0.1,  0.4 ,  0.15 ,  0.15  ,  0.1 ,  0.40 , 0.15 ,  0.1  , 0.1 , 0.11, 0.11, 0.1,  0 , 0 },//KICK-5
+        {0.1  ,0.1,  0.3 ,  0.15 ,  0.15  ,  0.15 ,  0.30 , 0.15 ,  0.15  , 0.15 , 0.11, 0.11, 0.1,  0 , 0 },//KICK-5
         // 1    2   3    4    5     6   7    8     9   10   11   12   13  14  15  
         {0.15,0.2,0.3,0.15,0.15,0.15,0.15,0.1,0.15,0.15,0.15,0.15,0.15, 0 , 0 },//REACTION-6
         // 1    2    3    4    5     6   7    8     9   10   11   12   13  14  15  
@@ -29,7 +29,7 @@ const float Animation::switchTime_p2[10][16]{
         // 1    2    3    4    5     6   7    8     9   10   11   12   13  14   15   
         {0.07,0.07, 0.07 , 0.07 ,0.07 ,0.07 ,0.1 ,0.1 ,0.1 ,0.15,0.15,0.15,0.1, 0 , 0 },//IDLE-0
         // 1    2    3    4      5      6      7     8      9     10      11      12     13   14  15  
-        {0.15, 0.5 ,0.15, 0.15, 0.15 , 0.5  , 0.15, 0.15 , 0.15 , 0.15  , 0.5 , 0.15 , 0.15, 0 , 0 },//PUNCH-1
+        {0.15, 0.5 ,0.15, 0.15, 0.15 , 0.15  , 0.5, 0.15 , 0.15 , 0.15  , 0.5 , 0.15 , 0.15, 0 , 0 },//PUNCH-1
         // 1    2    3    4    5     6   7    8     9   10   11   12   13  14  15  
         {0.01,0.015,0.1,0.1,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15, 0 , 0 },//WALK-2
         // 1    2    3    4     5     6   7    8     9   10   11   12   13  14  15  
@@ -37,7 +37,7 @@ const float Animation::switchTime_p2[10][16]{
         // 1    2    3    4    5     6   7    8     9   10   11   12   13  14  15        
         {0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15, 0 , 0 },//CROUCH-4
         // 1    2     3       4       5      6         7    8      9      10     11     12     13   14   15  
-        {0.1  ,0.1,  0.1 ,  0.15 ,  0.45  ,  0.1 ,  0.10 , 0.15 ,  0.1  , 0.1 , 0.15, 0.15, 0.15,  0 , 0 },//KICK-5
+        {0.1  ,0.1,  0.1 ,  0.15 ,  0.35  ,  0.1 ,  0.10 , 0.15 ,  0.1  , 0.1 , 0.15, 0.15, 0.15,  0 , 0 },//KICK-5
         // 1    2   3    4    5     6   7    8     9   10   11   12   13  14  15  
         {0.15,0.2,0.3,0.15,0.15,0.15,0.15,0.1,0.15,0.15,0.15,0.15,0.15, 0 , 0 },//REACTION-6
         // 1    2    3    4    5     6   7    8     9   10   11   12   13  14  15  
@@ -153,7 +153,7 @@ void Animation::Update_p1(PlayerState player_state, float deltaTime, bool faceRi
         {
             if(combo_move == true)
             {
-                if(currentImage.x >9)
+                if(currentImage.x >8)
                 {
                     currentImage.x = 0;
                     currentImage.y = IDLE;
@@ -161,7 +161,7 @@ void Animation::Update_p1(PlayerState player_state, float deltaTime, bool faceRi
                 }
                 else
                 {
-                    currentImage.y=PUNCH;
+                    currentImage.y=KICK;
 
                 } 
             }
@@ -277,20 +277,37 @@ void Animation::Update_p2(PlayerState player_state, float deltaTime, bool faceRi
                 currentImage.x = 0;
 
         }
-
         else if(currentImage.y == PUNCH)
-        {
-            if(currentImage.x >2)
+        {   
+            if(combo_move == true)
             {
-                currentImage.x = 0;
-                currentImage.y = IDLE;
-                input_status = isReleased;
-            }
-            else
-            {
-                 currentImage.y=PUNCH;
+                if(currentImage.x >8)
+                {
+                    currentImage.x = 0;
+                    currentImage.y = IDLE;
+                    input_status = isReleased;
+                }
+                else
+                {
+                    currentImage.y=PUNCH;
 
-            } 
+                } 
+            }
+            else if(combo_move == false)
+            {
+                
+                if(currentImage.x >2)
+                {
+                    currentImage.x = 0;
+                    currentImage.y = IDLE;
+                    input_status = isReleased;
+                }
+                else
+                {
+                    currentImage.y=PUNCH;
+
+                } 
+            }
         }
 
         else if (currentImage.y == JUMP)

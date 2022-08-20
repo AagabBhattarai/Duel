@@ -33,7 +33,7 @@ void Player::Update(float deltaTime, sf::Vector2u wsize, bool player_or_enemy, b
     velocity.x = 0.f;
     velocity.y =0.f;
     
-    //This segement is for making sure punch reaction is played at full
+    //This segement is for making sure  reaction is played at full
     if(!Animation::reaction_done)
     {
         if (player_or_enemy)  //to differentiate between player 1 and player 2
@@ -52,9 +52,7 @@ void Player::Update(float deltaTime, sf::Vector2u wsize, bool player_or_enemy, b
     else    
         Animation::reaction_done = false;
 
-   
-    //For player 1
-    
+       
 
     if (Animation::input_status == InputStatus::isReleased)
     {
@@ -75,25 +73,20 @@ void Player::Update(float deltaTime, sf::Vector2u wsize, bool player_or_enemy, b
         if( (body.getPosition().y) - maxHeight > 0 && !gravity_starts)
         {
             velocity.y =  (maxHeight -body.getPosition().y) ;
-            // velocity.y =  -206.67f;
 
             if(body.getPosition().y < 377)
             {
                 gravity_starts = true;
-                // body.setPosition(body.getPosition().x,376.0f);
             }
         }
-        if( floor - body.getPosition().y > 0 && gravity_starts == true)
+        if( abs(floor - body.getPosition().y) > 0 && gravity_starts && body.getPosition().y != 500)
         {
-            velocity.y = (floor - body.getPosition().y ) *4 ;
-            // velocity.y =  +206.67f;
+            velocity.y = (floor - body.getPosition().y ) * 5 ;
 
-            // if(body.getPosition().y > floor || abs(body.getPosition().y - 500.0f) ==0 )/
-            if(body.getPosition().y > 500)
+            if(body.getPosition().y > 495)
             {
                 body.setPosition(body.getPosition().x,500.0f);
-                // player_state= IDLE;
-                gravity_starts = false;
+
             }
         }
     }
@@ -101,8 +94,8 @@ void Player::Update(float deltaTime, sf::Vector2u wsize, bool player_or_enemy, b
     {
         gravity_starts = false;
     }
-   
-    // std::cout<<body.getPosition().y<<std::endl;
+    if(player_or_enemy)
+    std::cout<<body.getPosition().y<<std::endl;
 
     if (velocity.x > 0.0f)
         faceRight = true;
@@ -153,15 +146,12 @@ void Player::Player1_input(bool player_or_enemy, sf::Vector2u wsize, bool checkC
             {
                 velocity.x -= speed;
                 player_state = PlayerState::WALK;
-                // faceRight = true;//Test with single direction movement
             }
         }
         else if(sf::Keyboard::isKeyPressed(sf::Keyboard::W) && canJump)
         {
-            // canJump = false;
              player_state = JUMP;
             velocity.y = -100;
-            //velocity.x = 0.001;
             Animation::input_status = isPressed;
         }
         else if (sf::Keyboard::isKeyPressed(sf::Keyboard::G) && sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
@@ -247,7 +237,7 @@ void Player::Player1_input(bool player_or_enemy, sf::Vector2u wsize, bool checkC
                 velocity.x = 0;
             else
             {
-                velocity.x -= speed / 1000;
+                // velocity.x -= speed / 1000;
                 player_state = PlayerState::CROUCH;
             }
         }
@@ -271,7 +261,7 @@ void Player::Player1_input(bool player_or_enemy, sf::Vector2u wsize, bool checkC
             else
             {
                 velocity.x-= speed / 1000;
-                player_state = PlayerState::PUNCH;
+                player_state = PlayerState::KICK;
                 Animation::input_status = isPressed;
                 Animation::combo_move = false;
             }
@@ -287,17 +277,6 @@ void Player::Player1_input(bool player_or_enemy, sf::Vector2u wsize, bool checkC
                 player_state = PlayerState::STAND_BLOCK;
             }
         }
-        // else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
-        // {
-        //     if (body.getPosition().x - body.getSize().x/2 <= 0)
-        //         velocity.x = 0;
-        //     else
-        //     {
-        //         velocity.x += speed / 1000;
-        //         player_state = PlayerState::REACTION;
-        //         Animation::input_status = isPressed;
-        //     }
-        // }
         else
         {
         player_state = PlayerState::IDLE;
@@ -311,18 +290,19 @@ void Player::Player1_input(bool player_or_enemy, sf::Vector2u wsize, bool checkC
 
 void Player::Player2_input(bool player_or_enemy, sf::Vector2u wsize, bool checkCollision)
 {
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::P ) &&sf::Keyboard::isKeyPressed(sf::Keyboard::Right ) )
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::L ) &&sf::Keyboard::isKeyPressed(sf::Keyboard::RControl) )
         {
             if (body.getPosition().x - body.getSize().x/2 <= 0)
                 velocity.x = 0;
             else
             {
                 velocity.x += speed / 1000;
-                player_state = PlayerState::STAND_BLOCK;
+                player_state = PlayerState::PUNCH;
+                combo_move=true;
             }
         }
 
-        else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
+        else if (sf::Keyboard::isKeyPressed(sf::Keyboard::I))
         {
             if (body.getPosition().x + body.getSize().x/2 >= wsize.x)
                 velocity.x = 0.f;
@@ -334,14 +314,16 @@ void Player::Player2_input(bool player_or_enemy, sf::Vector2u wsize, bool checkC
             }
         }
 
-        else if (sf::Keyboard::isKeyPressed(sf::Keyboard::P ) &&sf::Keyboard::isKeyPressed(sf::Keyboard::Left ) )
+        else if (sf::Keyboard::isKeyPressed(sf::Keyboard::K ) &&sf::Keyboard::isKeyPressed(sf::Keyboard::RControl ) )
         {
             if (body.getPosition().x - body.getSize().x/2 <= 0)
                 velocity.x = 0;
             else
             {
                 velocity.x -= speed / 1000;
-                player_state = PlayerState::STAND_BLOCK;
+                player_state = PlayerState::PUNCH;
+                Animation::combo_move = true;
+
             }
         }
        else if (sf::Keyboard::isKeyPressed(sf::Keyboard::L))
@@ -354,6 +336,7 @@ void Player::Player2_input(bool player_or_enemy, sf::Vector2u wsize, bool checkC
                 velocity.x += speed / 1000;
                 player_state = PlayerState::PUNCH;
                 Animation::input_status = isPressed;
+                combo_move = false;
             }
         }
         else if (sf::Keyboard::isKeyPressed(sf::Keyboard::K))
@@ -366,28 +349,28 @@ void Player::Player2_input(bool player_or_enemy, sf::Vector2u wsize, bool checkC
                 player_state = PlayerState::PUNCH;
                 Animation::input_status = isPressed;
                 faceRight = false;
+                combo_move = false;
             }
         }
-        else if (sf::Keyboard::isKeyPressed(sf::Keyboard::O) && sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+        else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
         {
             if (body.getPosition().x - body.getSize().x/2 <= 0)
                 velocity.x = 0;
             else
             {
-                velocity.x -= speed / 1000;
                 player_state = PlayerState::CROUCH;
             }
         }
-        else if (sf::Keyboard::isKeyPressed(sf::Keyboard::O) && sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+        else if (sf::Keyboard::isKeyPressed(sf::Keyboard::P))
         {
             if (body.getPosition().x - body.getSize().x/2 <= 0)
                 velocity.x = 0;
             else
             {
-                velocity.x += speed / 1000;
-                player_state = PlayerState::CROUCH;
+                player_state = PlayerState::STAND_BLOCK;
             }
         }
+    
         else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
         {
             if (body.getPosition().x + body.getSize().x/2 >= wsize.x)
@@ -432,18 +415,6 @@ void Player::Player2_input(bool player_or_enemy, sf::Vector2u wsize, bool checkC
             }
         }
 
-        
-        else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Numpad0))
-        {
-            if (body.getPosition().x - body.getSize().x/2 <= 0)
-                velocity.x = 0;
-            else
-            {
-                // velocity.x += speed / 1000;
-                player_state = PlayerState::REACTION;
-                Animation::input_status = isPressed;
-            }
-        }
         else
         {
         player_state = PlayerState::IDLE;

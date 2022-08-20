@@ -1,4 +1,3 @@
-
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
 #include <SFML/System.hpp>
@@ -13,10 +12,10 @@
 #include "Power.h"
 
 
-using namespace sf;
 
 int main(int argc, char** argv)
-{   int state_of_main_menu{};
+{   
+    int state_of_main_menu{};
     do
     {    
         state_of_main_menu = Initial::showMainMenu();
@@ -24,7 +23,6 @@ int main(int argc, char** argv)
         {
         
             sf::RenderWindow window(sf::VideoMode(1366, 704), "Duel");
-            // window.setVerticalSyncEnabled(true);
             window.setFramerateLimit(60);
 
             sf::Vector2u wsize = window.getSize();
@@ -61,18 +59,16 @@ int main(int argc, char** argv)
             }
             spark.setRepeated(true);
             Power powerup(&power);
-            //FIghter 
 
-            sf::Texture tplayer1;  //this is to import the player animation
+            //Fighter 
+            sf::Texture tplayer1;  
             if (!tplayer1.loadFromFile("ryu.png"))
             {
                 std::cout << "error for texture load player";
                 return -2;
             }
             tplayer1.setRepeated(true);
-            //tplayer.setSmooth(true); //this is to blur the sprite to make it smooth.
 
-            //PLayer.cpp//Player.h
             Player player1(&tplayer1, sf::Vector2u(16, 10), 150.0f, true, &spark); //player1 vanne object create garyom.
 
 
@@ -84,7 +80,6 @@ int main(int argc, char** argv)
             }
             tplayer2.setRepeated(true);
 
-            //PLayer.cpp//Player.h
             Player player2(&tplayer2, sf::Vector2u(16, 10), 150.0f, false, &spark);
 
             float deltaTime = 0.f; //this is the difference in time to switch between frames
@@ -92,7 +87,7 @@ int main(int argc, char** argv)
             sf::Clock clockForRoundTime;
 
 
-            //For Font for Timer
+            //For Font
             sf::Font font;
             if (!font.loadFromFile("font.otf"))
             {
@@ -102,7 +97,6 @@ int main(int argc, char** argv)
             sf::Text end_text;
             end_text.setFont(font);
 	        end_text.setFillColor(sf::Color(255,129,0));
-	        // end_text.setString("RYU WINS!!!");
 	        end_text.setCharacterSize(70);
             end_text.setOrigin(end_text.getCharacterSize()/2, end_text.getCharacterSize()/2);
 	        end_text.setPosition(wsize.x/2-20, wsize.y/2-20);
@@ -237,7 +231,7 @@ int main(int argc, char** argv)
                     powerup.setPosition(p2_position, player2.isFacingRight());
                     power_sound.play();
                 }
-                //this is for the position update is power
+                //this is for the position update of power
                 if(player2.player_state == POWER && player2.isImpactPhase() &&!(Collision::checkCollisionPower(player1.playerPosition_x(), p2_position.x, player1.playerPosition_y(), p2_position.y)))
                 {   
                     if(player2.isFacingRight() == false)
@@ -373,7 +367,7 @@ int main(int argc, char** argv)
                 if(clockForRoundTime.getElapsedTime().asSeconds()  < 2)
                 {
                     end_sound.play();
-                    win_sound.play();
+                    // win_sound.play();
                     
                     end_text.setScale(2,2);
                     end_text.setPosition(wsize.x/2-90,wsize.y/2-100);
@@ -383,7 +377,7 @@ int main(int argc, char** argv)
                 
                 if(refree.getP1Health() <0 || refree.getP2Health() <0 || clockForRoundTime.getElapsedTime().asSeconds() > 90) 
                 {
-                    win_sound.play();
+                    // win_sound.play();
                     match_over = true;
                     end_counter += deltaTime;
                 }
@@ -404,16 +398,11 @@ int main(int argc, char** argv)
                 }
 
                 window.display();
-                //HERE YOU CAN CALL THE CASE FOR WHEN HEALTH IS ZERO
                 if(end_counter > 5)
                 {
-                    // p2_wins
-                    // this line doesn't work
                     break;
                 }
                
-                //END SCRREN PART PART ENDS
-                // ADD CONDTION IF END SCREEN PART IF TRUE THEN WHAT TO DO
             }
     
 
