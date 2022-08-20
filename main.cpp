@@ -216,7 +216,7 @@ int main(int argc, char** argv)
                 match_record_read.read(reinterpret_cast<char*>(&ken_wins),sizeof(ken_wins));
                 match_record_read.read(reinterpret_cast<char*>(&ryu_wins),sizeof(ryu_wins));
             }
-            std::cout<<std::endl<<total_matches<<std::endl<<ken_wins;
+            
             //game loop starts now
             total_matches++;
             while (window.isOpen())

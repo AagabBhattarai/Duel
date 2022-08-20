@@ -62,7 +62,7 @@ int Initial::showMainMenu()//main page
 
 
 					sf::Font font;
-					if (!font.loadFromFile("font.otf"))
+					if (!font.loadFromFile("8-bit Arcade In.ttf"))
 					{
 						std::cout << "Calibri ttf";
 						return -1;
